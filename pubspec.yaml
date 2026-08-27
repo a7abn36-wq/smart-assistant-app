@@ -1,0 +1,21 @@
+name: smart_assistant
+description: المساعد الذكي - تطبيق صيانة محطة التبريد
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  share_plus: ^7.2.1
+  image_picker: ^1.0.5
+  flutter_localizations:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
