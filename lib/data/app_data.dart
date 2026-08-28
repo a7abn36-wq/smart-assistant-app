@@ -31,6 +31,7 @@ const List<EquipmentCategory> categories = [
     nameEn: "Chillers",
     icon: "\u2744\uFE0F",
     color: 0xFF00E5FF,
+    severity: 'warning',
   ),
   EquipmentCategory(
     id: "primaryPumps",
@@ -38,6 +39,7 @@ const List<EquipmentCategory> categories = [
     nameEn: "Primary Pumps",
     icon: "\uD83D\uDCA7",
     color: 0xFF448AFF,
+    severity: 'warning',
   ),
   EquipmentCategory(
     id: "condenserPumps",
@@ -45,6 +47,7 @@ const List<EquipmentCategory> categories = [
     nameEn: "Condenser Pumps",
     icon: "\uD83C\uDF0A",
     color: 0xFF2979FF,
+    severity: 'warning',
   ),
   EquipmentCategory(
     id: "secondaryPumps",
@@ -52,6 +55,7 @@ const List<EquipmentCategory> categories = [
     nameEn: "Secondary Pumps",
     icon: "\uD83D\uDCA0",
     color: 0xFF00B0FF,
+    severity: 'warning',
   ),
   EquipmentCategory(
     id: "coolingTowers",
@@ -59,6 +63,7 @@ const List<EquipmentCategory> categories = [
     nameEn: "Cooling Towers",
     icon: "\uD83C\uDF21\uFE0F",
     color: 0xFF18FFFF,
+    severity: 'warning',
   ),
   EquipmentCategory(
     id: "drives",
@@ -66,6 +71,7 @@ const List<EquipmentCategory> categories = [
     nameEn: "VFD Drives",
     icon: "\u26A1",
     color: 0xFFFFAB00,
+    severity: 'warning',
   ),
   EquipmentCategory(
     id: "valves",
@@ -73,6 +79,7 @@ const List<EquipmentCategory> categories = [
     nameEn: "Valves",
     icon: "\uD83D\uDD27",
     color: 0xFFFF6D00,
+    severity: 'warning',
   ),
   EquipmentCategory(
     id: "waterTreatment",
@@ -80,6 +87,7 @@ const List<EquipmentCategory> categories = [
     nameEn: "Water Treatment",
     icon: "\uD83D\uDCA7",
     color: 0xFF76FF03,
+    severity: 'warning',
   ),
   EquipmentCategory(
     id: "expansionTank",
@@ -87,6 +95,7 @@ const List<EquipmentCategory> categories = [
     nameEn: "Expansion Tank",
     icon: "\uD83D\uDEE0\uFE0F",
     color: 0xFFB388FF,
+    severity: 'warning',
   ),
 ];
 
@@ -102,6 +111,7 @@ class Fault {
   final String cause;
   final String solution;
   final List<String> keywords;
+  final String severity;
 
   const Fault({
     required this.id,
@@ -111,6 +121,7 @@ class Fault {
     required this.cause,
     required this.solution,
     required this.keywords,
+    required this.severity,
   });
 }
 
@@ -121,16 +132,20 @@ class Fault {
 class Guide {
   final String id;
   final String title;
-  final List<String> steps;
-  final bool hasImage;
-  final String? warning;
+  final String whatIs;
+  final List<String> parts;
+  final List<String> check;
+  final List<String> commonFaults;
+  final String warn;
 
   const Guide({
     required this.id,
     required this.title,
-    required this.steps,
-    required this.hasImage,
-    this.warning,
+    required this.whatIs,
+    required this.parts,
+    required this.check,
+    required this.commonFaults,
+    required this.warn,
   });
 }
 
@@ -159,6 +174,7 @@ List<Fault> allFaults = [
       "كوندنسر وسخ", "فريون زايد", "condenser dirty", "فان كوندنسر",
       "ريستريكشن", "filter drier", "liquid line", "شيلر بيقف", "lockout",
     ],
+    severity: 'critical',
   ),
   Fault(
     id: "ch-02",
@@ -177,6 +193,7 @@ List<Fault> allFaults = [
       "evaporator", "expansion valve", "TXV", "فريون ناقص", "شيلر ضغط واطي",
       "sight glass", "subcooling", "superheat", "vacuum", "نيتروجين",
     ],
+    severity: 'critical',
   ),
   Fault(
     id: "ch-03",
@@ -195,6 +212,7 @@ List<Fault> allFaults = [
       "oil filter", "oil cooler", "superheat عالي", "زيت حارق", "motor burnout",
       "كمبريسور", "compressor", "حمل زايد", "overload", "زيت أسود",
     ],
+    severity: 'critical',
   ),
   Fault(
     id: "ch-04",
@@ -213,6 +231,7 @@ List<Fault> allFaults = [
       "evaporator fouling", "fouling", "expansion valve", "unloader",
       "شيلد وارم", "chilled water", "approach temperature", "ميه شيلد",
     ],
+    severity: 'critical',
   ),
   Fault(
     id: "ch-05",
@@ -231,6 +250,7 @@ List<Fault> allFaults = [
       "كمبريسور بيعزز", "impeller", "unbalance", "foundation bolts",
       "vibration analysis", "bearing noise", "grinding noise", "اهتزاز شيلر",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "ch-06",
@@ -249,6 +269,7 @@ List<Fault> allFaults = [
       "oil filter", "oil level", "oil pressure", "freon dilution", "زيت رغوي",
       "oil heater", "oil sight glass", "كمبريسور زيت",
     ],
+    severity: 'info',
   ),
   Fault(
     id: "ch-07",
@@ -267,6 +288,7 @@ List<Fault> allFaults = [
       "low load", "impeller damage", "centrifugal chiller", "inlet guide vanes",
       "surge protection", "chiller surge", "كمبريسور سيرج", "اهتزاز كمبريسور",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "ch-08",
@@ -285,6 +307,7 @@ List<Fault> allFaults = [
       "sensor فالس", "power supply", "EEPROM", "chiller error",
       "error log", "service manual", "شيلر خطأ", "شيلر error",
     ],
+    severity: 'info',
   ),
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -307,6 +330,7 @@ List<Fault> allFaults = [
       "strainer", "foot valve", "NPSH", "priming", "مضخة هواء",
       "bleed air", "air vent", "مضخة برايمري", "primary pump",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "pp-02",
@@ -325,6 +349,7 @@ List<Fault> allFaults = [
       "shaft wear", "dry running", "pump alignment", "seal faces",
       "مضخة بتسرب", "seal replacement", "shaft runout", "مضخة برايمري",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "pp-03",
@@ -343,6 +368,7 @@ List<Fault> allFaults = [
       "phase missing", "motor bearings", "impeller blockage", "مضخة تريب",
       "trip", "voltage unbalanced", "clamp meter", "موتور بيسخن",
     ],
+    severity: 'critical',
   ),
   Fault(
     id: "pp-04",
@@ -361,6 +387,7 @@ List<Fault> allFaults = [
       "coupling", "foundation bolts", "cavitation", "مضخة صراخ",
       "pump bearing", "misalignment", "dial indicator",
     ],
+    severity: 'critical',
   ),
   Fault(
     id: "pp-05",
@@ -379,6 +406,7 @@ List<Fault> allFaults = [
       "discharge pressure", "system resistance", "isolation valve",
       "مضخة ضغط واطي", "pump performance", "differential pressure",
     ],
+    severity: 'critical',
   ),
   Fault(
     id: "pp-06",
@@ -397,6 +425,7 @@ List<Fault> allFaults = [
       "VFD error", "drive fault", "مضخة درايف", "VFD reset",
       "motor parameters", "undervoltage",
     ],
+    severity: 'warning',
   ),
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -419,6 +448,7 @@ List<Fault> allFaults = [
       "cooling tower flow", "condenser water flow", "ميه كوندنسر",
       "flow meter", "differential pressure", "wear rings",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "cp-02",
@@ -437,6 +467,7 @@ List<Fault> allFaults = [
       "shaft wear", "مضخة بتسرب", "seal water", "packing rings",
       "gland follower", "مضخة كوندنسر", "shaft groove",
     ],
+    severity: 'info',
   ),
   Fault(
     id: "cp-03",
@@ -455,6 +486,7 @@ List<Fault> allFaults = [
       "reverse rotation", "soft foot", "foundation bolts", "bearings run-in",
       "spectrum analysis", "مضخة كوندنسر", "بعد الصيانة",
     ],
+    severity: 'critical',
   ),
   Fault(
     id: "cp-04",
@@ -473,6 +505,7 @@ List<Fault> allFaults = [
       "cooling tower basin", "foot valve", "non-return valve", "air lock",
       "مضخة كوندنسر", "ساكشن هواء", "high point",
     ],
+    severity: 'critical',
   ),
   Fault(
     id: "cp-05",
@@ -491,6 +524,7 @@ List<Fault> allFaults = [
       "contactor", "VFD rotation", "rotation direction", "مضخة بالمقلوب",
       "DOL starter", "coupling", "impeller",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "cp-06",
@@ -509,6 +543,7 @@ List<Fault> allFaults = [
       "PID oscillation", "auto manual", "مضخة بتقف وبتشتغل",
       "differential pressure switch", "setpoint", "مضخة كوندنسر",
     ],
+    severity: 'warning',
   ),
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -531,6 +566,7 @@ List<Fault> allFaults = [
       "differential pressure sensor", "DP sensor", "2-way valve",
       "balance valve", "VFD PID", "ميه تبريد", "CHW pressure",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "sp-02",
@@ -549,6 +585,7 @@ List<Fault> allFaults = [
       "bypass active", "VFD parameters", "manual mode", "مضخة سرعة ثابتة",
       "secondary pump VFD", "DP sensor", "remote mode",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "sp-03",
@@ -567,6 +604,7 @@ List<Fault> allFaults = [
       "dry running", "chemical treatment", "shaft runout", "laser alignment",
       "مضخة سكندري", "seal type", "low pressure switch",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "sp-04",
@@ -585,6 +623,7 @@ List<Fault> allFaults = [
       "DP sensor fault", "BMS setpoint", "3-way bypass valve",
       "مضخة سكندري", "high pressure", "CHW system",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "sp-05",
@@ -603,6 +642,7 @@ List<Fault> allFaults = [
       "expansion tank", "pre-charge", "bleed air", "مضخة سكندري",
       "air eliminator", "leak suction", "CHW system air",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "sp-06",
@@ -621,6 +661,7 @@ List<Fault> allFaults = [
       "single phasing", "overload relay", "motor insulation", "cable size",
       "voltage drop", "motor protection", "مضخة سكندري",
     ],
+    severity: 'warning',
   ),
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -643,6 +684,7 @@ List<Fault> allFaults = [
       "blowdown", "cooling tower basin", "evaporation", "water level",
       "برج تبريد حوض", "make-up valve", "solenoid valve",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "ct-02",
@@ -661,6 +703,7 @@ List<Fault> allFaults = [
       "VFD", "fan motor", "cooling tower fan", "overload",
       "برج تبريد فان", "fan belt", "air flow",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "ct-03",
@@ -679,6 +722,7 @@ List<Fault> allFaults = [
       "wet bulb", "cooling tower performance", "water distribution",
       "برج تبريد ساخن", "approach temperature", "fill packing",
     ],
+    severity: 'critical',
   ),
   Fault(
     id: "ct-04",
@@ -697,6 +741,7 @@ List<Fault> allFaults = [
       "cooling tower drift", "nozzles spray", "برج تبريد رذاذ",
       "environmental", "eliminators",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "ct-05",
@@ -715,6 +760,7 @@ List<Fault> allFaults = [
       "cycles of concentration", "chemical dosing", "descale", "biocide",
       "برج تبريد وسخ", "conductivity", "acid cleaning",
     ],
+    severity: 'critical',
   ),
   Fault(
     id: "ct-06",
@@ -733,6 +779,7 @@ List<Fault> allFaults = [
       "resonance", "cooling tower structure", "fan blade", "cracks",
       "برج تبريد اهتزاز", "vibration isolator", "structural bolts",
     ],
+    severity: 'info',
   ),
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -755,6 +802,7 @@ List<Fault> allFaults = [
       "acceleration time", "megger test", "motor winding", "current limit",
       "درايف تريب", "VFD error", "motor cable",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "vd-02",
@@ -773,6 +821,7 @@ List<Fault> allFaults = [
       "heatsink", "ambient temperature", "IGBT cooling", "درايف سخن",
       "VFD temperature", "cabinet cooling",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "vd-03",
@@ -791,6 +840,7 @@ List<Fault> allFaults = [
       "VFD parameters", "feedback signal", "fixed frequency",
       "درايف سرعة ثابتة", "terminal mode", "keypad mode",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "vd-04",
@@ -809,6 +859,7 @@ List<Fault> allFaults = [
       "MCCB", "capacitor", "voltage drop", "power supply",
       "درايف فولت واطي", "phase missing", "DC bus voltage",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "vd-05",
@@ -827,6 +878,7 @@ List<Fault> allFaults = [
       "motor winding", "junction box", "cable insulation", "moisture",
       "درايف أرضي", "ground leakage", "rewinding",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "vd-06",
@@ -845,6 +897,7 @@ List<Fault> allFaults = [
       "baud rate", "termination resistor", "comm loss", "EMF interference",
       "درايف اتصال", "communication card", "device address",
     ],
+    severity: 'warning',
   ),
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -867,6 +920,7 @@ List<Fault> allFaults = [
       "0-10V", "4-20mA", "AHU valve", "valve stem", "spring return",
       "صمام عالق", "actuator تالف", "valve stroke",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "vl-02",
@@ -885,6 +939,7 @@ List<Fault> allFaults = [
       "valve blockage", "differential pressure", "actuator calibration",
       "صمام PICV", "flow meter", "cartridge", "strainer",
     ],
+    severity: 'info',
   ),
   Fault(
     id: "vl-03",
@@ -903,6 +958,7 @@ List<Fault> allFaults = [
       "BMS logic", "fail position", "NC valve", "NO valve",
       "صمام بايباس", "bypass logic", "DP control",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "vl-04",
@@ -921,6 +977,7 @@ List<Fault> allFaults = [
       "seat ring", "gear operator", "valve lapping", "pressure test",
       "صمام بيخرج", "butterfly passing", "zero leakage",
     ],
+    severity: 'info',
   ),
   Fault(
     id: "vl-05",
@@ -939,6 +996,7 @@ List<Fault> allFaults = [
       "design flow", "readout valve", "CHW balancing", "AHU balancing",
       "صمام توازن", "flow meter", "re-balancing",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "vl-06",
@@ -957,6 +1015,7 @@ List<Fault> allFaults = [
       "disc", "spring loaded", "surge arrester", "صمام نون ريتورن",
       "check valve leaking", "backflow", "swing check",
     ],
+    severity: 'warning',
   ),
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -979,6 +1038,7 @@ List<Fault> allFaults = [
       "galvanic corrosion", "corrosion coupon", "CHW corrosion",
       "معالجة ميه", "sodium hydroxide", "molybdate", "dielectric",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "wt-02",
@@ -997,6 +1057,7 @@ List<Fault> allFaults = [
       "scale inhibitor", "acid cleaning", "water softener", "condenser scale",
       "معالجة ميه", "TDS", "precipitation", "phosphonate",
     ],
+    severity: 'critical',
   ),
   Fault(
     id: "wt-03",
@@ -1015,6 +1076,7 @@ List<Fault> allFaults = [
       "chemical pump", "injection point", "crystallization",
       "معالجة ميه", "dosing problem", "chemical tank",
     ],
+    severity: 'info',
   ),
   Fault(
     id: "wt-04",
@@ -1033,6 +1095,7 @@ List<Fault> allFaults = [
       "shock dosing", "UV system", "dead legs", "chlorine",
       "معالجة ميه", "biological growth", "heterotrophic",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "wt-05",
@@ -1051,6 +1114,7 @@ List<Fault> allFaults = [
       "solenoid valve", "make-up water", "sensor calibration",
       "معالجة ميه", "µS/cm", "blowdown valve",
     ],
+    severity: 'info',
   ),
   Fault(
     id: "wt-06",
@@ -1069,6 +1133,7 @@ List<Fault> allFaults = [
       "contamination", "organic matter", "water treatment",
       "معالجة ميه", "foam problem", "chiller oil leak",
     ],
+    severity: 'warning',
   ),
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -1091,6 +1156,7 @@ List<Fault> allFaults = [
       "bladder", "diaphragm", "system pressure", "static head",
       "خزان تمدد", "air cushion", "tank pressure",
     ],
+    severity: 'critical',
   ),
   Fault(
     id: "et-02",
@@ -1109,6 +1175,7 @@ List<Fault> allFaults = [
       "pressure relief valve", "tank size", "system pressure",
       "خزان تمدد مليان", "PRV", "tank replacement",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "et-03",
@@ -1127,6 +1194,7 @@ List<Fault> allFaults = [
       "fill pressure", "pressure reducing valve", "expansion tank",
       "خزان تمدد", "system overpressure", "isolation valve",
     ],
+    severity: 'critical',
   ),
   Fault(
     id: "et-04",
@@ -1145,6 +1213,7 @@ List<Fault> allFaults = [
       "air in system", "baffles", "return line", "expansion tank",
       "خزان تمدد", "هواء في النظام", "air bleeding",
     ],
+    severity: 'warning',
   ),
   Fault(
     id: "et-05",
@@ -1163,267 +1232,295 @@ List<Fault> allFaults = [
       "surge arrester", "VFD deceleration", "pipe support", "quick closing",
       "خزان تمدد", "water hammer noise", "surge analysis",
     ],
+    severity: 'critical',
   ),
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// ALL GUIDES DATA — 10 Maintenance & Diagnostic Guides
+// ALL GUIDES DATA — 20 Rich Component & Procedure Guides
 // ═══════════════════════════════════════════════════════════════════════════════
 
 List<Guide> allGuides = [
   Guide(
     id: "g-01",
-    title: "دليل فحص الشيلر اليومي (Chiller Daily Log)",
-    steps: [
-      "١. سجل وقت القراءة والتاريخ",
-      "٢. قس Evaporator Supply Water Temperature (°C)",
-      "٣. قس Evaporator Return Water Temperature (°C)",
-      "٤. احسب Delta T = Return - Supply (المفروض 4-6°C)",
-      "٥. قس Condenser Supply Water Temperature (°C)",
-      "٦. قس Condenser Return Water Temperature (°C)",
-      "٧. سجل Suction Pressure و Discharge Pressure (bar)",
-      "٨. سجل Oil Pressure و Oil Temperature",
-      "٩. سجل Compressor Amps من كل Phase",
-      "١٠. سجل الـ Running Hours للشيلر",
-      "١١. سجل أي Alarm أو Warning على الشاشة",
-      "١٢. بص على الـ Sight Glass وتأكد إن مفيش Bubbles (فريون كافي)",
-      "١٣. اسمع صوت الكمبريسور (مفيش Noise غريب)",
-      "١٤. بص على أي Leakage حوالين الـ Flanges والـ Valves",
-    ],
-    hasImage: true,
-    warning: "⚠️ لو لقيت أي قراءة خارج المجال المطلوب، سجلها بالأحمر وابلغ المهندس فوراً. متتجاهلش أي Alarm!",
+    title: "قراءة شاشة الشيلر Trane",
+    whatIs: "الشاشة الرئيسية بتاعت الشيلر — لو قريتها صح هتعرف الطبيعي من البايظ في ثواني.",
+    parts: ["حالة التشغيل (Running / Stop)", "حرارات دخول وخروج المبخر", "حرارات دخول وخروج المكثف", "فرق ضغط الزيت (Oil dP)", "نسبة أمبير الموتور من المقنن (RLA%)"],
+    check: ["قارن حرارة المياه الخارجة من المبخر بالسيت بوينت (4.5 درجة)", "فرق المكثف الطبيعي 1.5-3 درجات", "فرق ضغط الزيت فوق 69 كيلو باسكال", "الأمبير تحت 90% من المقنن"],
+    commonFaults: ["حرارة خارجة أعلى من السيت = حمل عالي أو سعة قليلة", "فرق مكثف عالي = المكثف وسخ يحتاج تنظيف", "فرق زيت واطي = فلتر زيت أو مستوى", "أمبير عالي = حمل زايد أو اتساخ"],
+    warn: "أي قراءة خارج الطبيعي: سجلها وصور الشاشة فوراً.",
   ),
   Guide(
     id: "g-02",
-    title: "خطوات تشغيل المحطة من الصفر بعد انقطاع كهرباء (Cold Start Procedure)",
-    steps: [
-      "١. اتأكد من إن الـ Main Power رجع ومتستانس",
-      "٢. شيك كل الـ MCCBs والـ Isolators — خليهم ON",
-      "٣. شغل الـ Primary Pumps الأولى وانتظر الـ Pressure Stabilize",
-      "٤. شغل الـ Condenser Pumps وتأكد من الـ Flow",
-      "٥. اتأكد من مستوى الحوض في أبراج التبريد",
-      "٦. شغل فانات أبراج التبريد",
-      "٧. افتح الـ Chiller Isolation Valves (Suction + Discharge)",
-      "٨. فعّل الـ Oil Heater للشيلر وانتظر ٤-٨ ساعات (لو الشيلر كان واقف طويل)",
-      "٩. اضغط Start على الشيلر وراقب الـ Startup Sequence",
-      "١٠. راقب الـ Parameters (Pressure, Temperature, Amps) لمدة ١٥ دقيقة",
-      "١١. بعد استقرار الشيلر الأول، شغل الشيلر التاني (لو محتاج)",
-      "١٢. شغل الـ Secondary Pumps واتأكد من الـ DP Sensor",
-      "١٣. فعّل الـ BMS واتأكد من الـ Control Signals",
-      "١٤. سجل كل القراءات في الـ Log Book",
-    ],
-    hasImage: false,
-    warning: "⚠️ لا تشغل أكتر من شيلر واحد في نفس الوقت! انتظر كل واحد يستقر الأول. لو فيه أي Alarm أثناء الـ Startup، قف فوراً وافحص.",
+    title: "خطوات تشغيل المحطة من الصفر بعد انقطاع كهرباء",
+    whatIs: "إجراء تشغيل المحطة بالكامل من حالة التوقف الكامل بعد انقطاع كهرباء أو صيانة شاملة.",
+    parts: ["اللوحة الرئيسية MCC", "مضخات البرايمري", "مضخات الكوندنسر", "أبراج التبريد", "الشيلرات", "مضخات السكندري", "نظام BMS"],
+    check: ["تأكد من إن الـ Main Power رجع ومستقر", "شيك كل الـ MCCBs والـ Isolators — خليهم ON", "شغل الـ Primary Pumps الأولى وانتظر الـ Pressure يستقر", "شغل الـ Condenser Pumps وتأكد من الـ Flow", "تأكد من مستوى الحوض في أبراج التبريد", "شغل فانات أبراج التبريد", "افتح الـ Chiller Isolation Valves", "فعّل الـ Oil Heater للشيلر وانتظر 4-8 ساعات لو كان واقف طويل", "اضغط Start على الشيلر وراقب الـ Startup Sequence", "رافق الـ Parameters لمدة 15 دقيقة", "بعد استقرار الشيلر الأول شغل التاني لو محتاج", "شغل الـ Secondary Pumps", "فعّل الـ BMS واتأكد من إشارات الكنترول"],
+    commonFaults: ["مضخة مش بتشغل = هوا محبوس أو فلتش مقلوب", "شيلر بيعطي Lockout = راجع الإنذار على الشاشة", "أمبير عالي = حمل زيادة أو سحب مفقود", "برج مياه قليلة = صمام تعويض واقف"],
+    warn: "لا تشغل أكتر من شيلر واحد في نفس الوقت! انتظر كل واحد يستقر. لو فيه Alarm أثناء Startup قف فوراً.",
   ),
   Guide(
     id: "g-03",
-    title: "كيفية قراءة منحنى المضخة (Pump Curve Reading)",
-    steps: [
-      "١. اجلب الـ Pump Curve من الـ Nameplate أو الـ Catalog",
-      "٢. حدد الـ Impeller Diameter المركب (لو فيه أكتر من حجم)",
-      "٣. على المحور الأفقي (X): ابحث عن الـ Flow Rate (م³/ساعة أو GPM)",
-      "٤. على المحور العمودي (Y): ابحث عن الـ Head/Pressure (متر أو قدم)",
-      "٥. قس الـ Actual Flow والـ Actual Pressure من المضخة",
-      "٦. ارسم نقطة التقاطع بين الـ Flow والـ Head على الـ Curve",
-      "٧. لو النقطة على الـ Curve = المضخة شغالة كويس",
-      "٨. لو النقطة يمين الـ Curve = Resistance أقل (أكتر Flow)",
-      "٩. لو النقطة شمال الـ Curve = Resistance أكتر (أقل Flow)",
-      "١٠. شوف الـ Efficiency Curve — أحسن نقطة هي الـ BEP (Best Efficiency Point)",
-      "١١. حاول تشغل المضخة قريب الـ BEP (80-110% من الـ BEP Flow)",
-      "١٢. لو بعيد عن الـ BEP: غيّر الـ Impeller Size أو عدّل الـ System",
-    ],
-    hasImage: true,
-    warning: null,
+    title: "عدسة البيان (السايت جلاس - Sight Glass)",
+    whatIs: "عدسة صغيرة على خط الشيلر بتوريك شحن الفريون ومستوى الزيت بعينك.",
+    parts: ["عدسة الفريون على خط السائل", "عدسة الزيت على الفاصل أو الكارتير"],
+    check: ["فريون صافي من غير فقاعات = شحن تمام", "فقاعات = شحن ناقص أو تسريب", "الزيت في نص العدسة = مستوى سليم"],
+    commonFaults: ["فقاعات مستمرة = دور على تسريب وقيس الضغوط", "زيت بينزل = بيسرب مع الفريون", "لون متغير = رطوبة تحتاج فلتر دراير"],
+    warn: "فقاعات مع حمل عالي: قيس الضغوط قبل أي قرار.",
   ),
   Guide(
     id: "g-04",
-    title: "صيانة الدرايف (VFD) الدورية والوقائية",
-    steps: [
-      "١. قف الدرايف وافصل الـ Main Power (Lockout/Tagout!)",
-      "٢. افتح الـ Cover ونظف بـ Compressed Air من جوه (فلاتر + Heatsink)",
-      "٣. شيك الـ Cooling Fan — دور باليد لو مابيشتغلش بسهولة غيّره",
-      "٤. فحص الـ Capacitors — لو انتفخت أو سالت غيّر الـ Board",
-      "٥. شد كل الـ Power Connections (Torque Wrench بالـ Spec)",
-      "٦. شيك الـ Display Parameters وCompare بالـ Original Settings",
-      "٧. فحص الـ EMC Filters واتأكد مفيش حرق",
-      "٨. قس الـ Input/Output Voltage بـ Multimeter",
-      "٩. فحص الـ Communication Ports (RS485, Analog)",
-      "١٠. سجل الـ Running Hours و Fault History",
-      "١١. نظف الـ Cabinet من بره واتأكد من الـ Seals",
-      "١٢. قفل الـ Cover وشغل الدرايف وراقب ٥ دقايق",
-    ],
-    hasImage: false,
-    warning: "⚠️ الـ Lockout/Tagout إلزامي! الدرايف فيه Capacitors بتخزن كهرباء حتى بعد فصل الباور. انتظر ١٠ دقايق على الأقل بعد الفصل.",
+    title: "جهاز المعالجة MicroVision",
+    whatIs: "عقل معالجة المياه: بيقيس التوصيلية ويتحكم في الحقن والتفوير أوتوماتيك.",
+    parts: ["شاشة قراءة التوصيلية", "صمام تفوير (Bleed) كهربائي", "مضخات حقن (Feed / Biocide A / B)", "أطراف توصيل الحساسات"],
+    check: ["التوصيلية الطبيعية 1300-1500 مايكروسيمنز", "لمبة Feed ولادة = بيحقن", "التوصيلية عالية = الـ Bleed يفتح", "مستوى تنكات الكيماوي كفاية"],
+    commonFaults: ["توصيلية عالية = صمام Bleed عالق أو مش بيفتح", "توصيلية واطية = Bleed عالق مفتوح (بيضيع مياه وكيماوي)", "مفيش حقن = مضخة فيها هوا أو بلف قدم بايظ"],
+    warn: "متغيرش الضبط من غير مسؤول المعالجة.",
   ),
   Guide(
     id: "g-05",
-    title: "إجراءات التنظيف الكيميائي للـ Chiller Evaporator (Chemical Cleaning)",
-    steps: [
-      "١. قف الشيلر وافصل الـ Water Connections",
-      "٢. اعمل Isolation للـ Evaporator (اقفل الـ Inlet والـ Outlet Valves)",
-      "٣. اربط الـ Chemical Circulation Pump بالـ Evaporator",
-      "٤. استخدم Descaling Solution (حمض Phosphoric أو Citric Acid مخفف)",
-      "٥. شغل الـ Circulation Pump واتأكد من الـ Flow (Circular)",
-      "٦. راقب الـ pH — لما يثبت = التنظيف خلص (عادة ٤-٨ ساعات)",
-      "٧. صب الـ Chemical Solution واعمل Flush بميه نظيفة",
-      "٨. اعمل Neutralization بـ Sodium Bicarbonate (pH 7)",
-      "٩. Flush تاني بميه نظيفة لحد ما الـ pH يثبت على 7",
-      "١٠. افتح الـ End Plates وافحص الـ Tubes من جوه (Endoscope)",
-      "١١. لو فيه Scale باقي: كرّر العملية",
-      "١٢. ركب الـ End Plates والـ Gaskets الجديدة",
-      "١٣. افتح الـ Valves واملأ النظام بميه مع Treatment",
-      "١٤. اعمل Pressure Test (1.5× Working Pressure)",
-    ],
-    hasImage: true,
-    warning: "⚠️ لبس PPE إلزامي (Gloves + Goggles + Apron)! الأحماض خطيرة. اشتغل في مكان مهوي جيد واعمل Neutralization كويس قبل ما تصرف.",
+    title: "إنفرتر Schneider ATV630",
+    whatIs: "جهاز بيتحكم في سرعة موتور المضخة بتغيير التردد — بيوفر كهربا ويحمي الشبكة.",
+    parts: ["شاشة عرض وأزرار", "مروحة تبريد داخلية", "أطراف تغذية وموتور", "لمبات حالة (STATUS / NET)"],
+    check: ["RUN + تردد على الشاشة = شغال", "أمبير حوالي 26-27 عندكم طبيعي", "المروحة بتلف ومنافذ التهوية نظيفة"],
+    commonFaults: ["OCF تيار عالي = موتور أو كابلات", "OHF سخونية = تهوية مسدودة بالتراب", "SCF شورت = كابلات الموتور", "مفيش شاشة = راجع التغذية"],
+    warn: "متعملش Reset أكتر من مرتين ورا بعض — دور على السبب.",
   ),
   Guide(
     id: "g-06",
-    title: "كيفية عمل Leak Test وملء الفريون (Leak Test & Refrigerant Charging)",
-    steps: [
-      "١. قف الشيلر وافصل الـ Power",
-      "٢. اربط الـ Nitrogen Cylinder مع الـ Regulator (Max 350 PSI)",
-      "٣. اضغط الـ Nitrogen في النظام ووصل للـ Test Pressure",
-      "٤. استخدم Soap Solution (صابون) على كل الـ Joints والـ Flanges",
-      "٥. لو لقيت Bubbles = فيه تسريب! علّم المكان",
-      "٦. لو مفيش Bubbles ظاهرة: انتظر ٣٠ دقيقة وشوف الـ Pressure Drop",
-      "٧. لو فيه Drop: استخدم Electronic Leak Detector لتعرف المكان",
-      "٨. لو مفيش Drop: النظام سليم — ابدأ Evacuation",
-      "٩. اربط الـ Vacuum Pump واعمل Evacuation (أقل من 500 Microns)",
-      "١٠. لو الـ Vacuum ما يثبتش = فيه Leak صغير (كرر الخطوة ٣)",
-      "١١. بعد Evacuation: ابدأ Refill بالوزن المكتوب على الـ Nameplate",
-      "١٢. شحن الفريون في حالة Vapor (مش Liquid!) للحماية",
-      "١٣. بعد الشحن: شغل الشيلر وقس الـ Superheat والـ Subcooling",
-      "١٤. سجل كمية الفريون في الـ Log Book",
-    ],
-    hasImage: true,
-    warning: "⚠️ الفريون غاز خطير! اشتغل في مكان مهوي. النيتروجين ضغطه عالي — استخدم Regulator دايماً. مفيش شعلة أو شرارة قريبة!",
+    title: "إنفرتر Danfoss VLT",
+    whatIs: "نفس شغل الشيدر: موحد بيتحول للمستمر وعاكس بيطول تردد متغير للموتور.",
+    parts: ["الموحد (Rectifier)", "دائرة DC Link بمكثفاتها", "العاكس (IGBTs)", "لوحة التحكم المحلية LCP", "مروحة التبريد"],
+    check: ["اقرا التردد والأمبير من اللوحة", "المروحة بتلف حر", "مفيش تراب متراكم على المشتت"],
+    commonFaults: ["AL4 فقد فاز = فيوزات وتغذية", "AL7 حمل زايد = قلل الحمل", "AL13 تيار عالي = كابلات", "مفيش عرض = تغذية"],
+    warn: "افصل واستنى 10 دقايق قبل فتح الغطاء — المكثفات بتفضل شاحنة!",
   ),
   Guide(
     id: "g-07",
-    title: "فحص وتوازن الـ Vibration للمضخات (Vibration Analysis Basics)",
-    steps: [
-      "١. جهّز الـ Vibration Analyzer/Accelerometer",
-      "٢. حدد نقاط القياس: DE Bearing, NDE Bearing, Housing, Motor",
-      "٣. ركب الـ Accelerometer بالمagnet على النقاط المحددة",
-      "٤. خد قراءة Overall Vibration (mm/s RMS أو in/s)",
-      "٥. قارن بالـ ISO 10816 Standards (Good/Alert/Danger)",
-      "٦. لو القراءة عالية: خد FFT Spectrum Analysis",
-      "٧. 1×RPM = Imbalance/Unbalance",
-      "٨. 2×RPM = Misalignment أو Looseness",
-      "٩. أرقام عشوائية (Broadband) = Bearings Problem",
-      "١٠. Blade Pass Frequency = Pump Hydraulic Problem",
-      "١١. سجل كل القراءات والتواريخ للـ Trending",
-      "١٢. لو الحالة بتسوء: خطط لـ Overhaul",
-    ],
-    hasImage: true,
-    warning: null,
+    title: "المشغل الكهربائي (Actuator MF200 / MF700)",
+    whatIs: "موتور كهربائي بيفتح ويقفل محبس مياه الكوندنسر/البرايمري أوتوماتيك بإشارة من الـ BMS.",
+    parts: ["موتور كهربائي 230 فولت", "جير تخفيض", "عجلة يدوية للطوارئ", "مؤشر وضع مفتوح/مقفول"],
+    check: ["كهرباء 230 واصلة", "المؤشر بيوري الوضع", "جرب العجلة والكهربا مفصولة"],
+    commonFaults: ["مش بيتحرك كهرباء = موتور محروق أو إشارة كنترول", "بيتحرك والمحبس واقف = جسم المحبس", "المؤشر غلط = معايرة"],
+    warn: "افصل الكهربا قبل لمس العجلة اليدوية.",
   ),
   Guide(
     id: "g-08",
-    title: "إجراءات الصيانة الدورية لبرج التبريد (Cooling Tower PM)",
-    steps: [
-      "١. قف الفان وافصل الباور (Lockout/Tagout)",
-      "٢. نظف الحوض من الـ Sludge والـ Dirt (Drain + Brush)",
-      "٣. شيك الـ Make-up Valve والـ Float Valve",
-      "٤. نظف الـ Strainer على خط الساكشن",
-      "٥. فحص الـ Fill Media — لو متكسرة غيّر",
-      "٦. نظف الـ Nozzles واتأكد من الـ Distribution Even",
-      "٧. شيك الـ Fan Blades (Crack, Balance, Tightness)",
-      "٨. أضف Grease للـ Fan Bearings",
-      "٩. شيك/شد الـ V-Belts (لو Belt Driven)",
-      "١٠. فحص الـ Drift Eliminators",
-      "١١. قس الـ Water Quality (pH, Conductivity, Chlorine)",
-      "١٢. سجل كل شيء في الـ PM Checklist",
-    ],
-    hasImage: false,
-    warning: "⚠️ برج التبريد بيحتاج صيانة كل شهر على الأقل في المناخ الحار. الـ Legionella Risk تتطلب تنظيف دوري منتظم.",
+    title: "صمام الثلاث وظائف (Triple Duty Valve)",
+    whatIs: "صمام واحد جامع 3 وظائف، مركب على طرد كل مضخة عندكم.",
+    parts: ["محبس إيقاف لعزل المضخة", "قرص عدم رجوع بيمنع رجوع المياه", "محبس موازنة بظبط التدفق وعليه % OPEN", "مصفاة داخلية بتتنضف"],
+    check: ["بص على مؤشر الفتح", "قارن صوت المضخة قبل وبعد", "دور على رشح حوالين الجلدة"],
+    commonFaults: ["برشح من العمود = تتغير جلدة العمود", "مبيقفلش تمام = جسم غريب على المقعد", "التدفق مش مظبوط = ظبط % OPEN"],
+    warn: "متقفلوش نهائي والمضخة شغالة.",
   ),
   Guide(
     id: "g-09",
-    title: "دليل إصلاح مشاكل الـ Alignment بين الموتور والمضخة",
-    steps: [
-      "١. جهّز الـ Dial Indicator Set و الـ Magnetic Base",
-      "٢. نظف الـ Faces بتاعة الـ Coupling halves",
-      "٣. ركب الـ Dial Indicator على الـ Motor Shaft (Radial + Axial)",
-      "٤. دور الـ Coupling 360° وسجل القراءات كل 90°",
-      "٥. احسب الـ Offset (فرق بين أعلى وأسفل/يمين وشمال)",
-      "٦. احسب الـ Angularity (فرق بين Face Reading)",
-      "٧. الـ Tolerance: 0.05mm Offset و 0.05mm/m Angularity",
-      "٨. ضيف/Shim Under الـ Motor Feet حسب الحساب",
-      "٩. لو محتاج: شيل Shim من الـ Front/Back Feet للـ Angularity",
-      "١٠. شد الـ Motor Anchor Bolts بالـ Torque المطلوب",
-      "١١. كرر القياس — لو مش في المجال: كرّر الخطوات",
-      "١٢. بعد التوافق: ركب الـ Coupling Spacer واختبر التشغيل",
-    ],
-    hasImage: true,
-    warning: null,
+    title: "مشتت السحب (Suction Diffuser)",
+    whatIs: "مصفاة ومشتت دوامات مركب على سحب المضخة — بيحمي الريشة.",
+    parts: ["جسم بغطاء", "مصفاة داخلية", "ريش تشتيت الدوامات", "سدادة تصريف"],
+    check: ["نضفه بعد أي شغل مواسير", "فرق الضغط قبله وبعده مش كبير", "حالة الجلدة قبل القفل"],
+    commonFaults: ["مسدود = كاويتيشن وخبط بالمضخة", "برشح من الغطاء = غير الجلدة"],
+    warn: "اقفل محبس السحب قبل فتح الغطاء.",
   ),
   Guide(
     id: "g-10",
-    title: "خطة الصيانة الوقائية السنوية لمحطة التبريد (Annual PM Plan)",
-    steps: [
-      "١. شيلرات: اعمل Oil Analysis, Filter Change, Leak Test, Refrigerant Check",
-      "٢. مضخات: Bearings Check, Seal Inspection, Alignment, Vibration Test",
-      "٣. أبراج تبريد: Full Cleaning, Fill Media Inspection, Structural Check",
-      "٤. درايفات: Full Inspection, Capacitor Check, Parameter Verification",
-      "٥. صمامات: Stroke Test, Packing/Gasket Check, Calibration",
-      "٦. معالجة ميه: Lab Analysis, Dosing System Calibration, Tank Clean",
-      "٧. خزان تمدد: Pre-charge Check, Bladder Inspection",
-      "٨. كهرباء: Thermographic Survey, Tightness Check, MCC Inspection",
-      "٩. BMS: Sensor Calibration, Control Logic Review, Trend Analysis",
-      "١٠. Pipe Work: Insulation Check, Support Inspection, Corrosion Check",
-      "١١. سجل كل النتائج و قارن بالسنة اللي فاتت",
-      "١٢. خطط للسنة الجاية بناء على حالة كل معدات",
-    ],
-    hasImage: false,
-    warning: "⚠️ الصيانة الوقائية بتوفر 30-50% من تكاليف الصيانة الطارئة! اتبع الخطة بدقة وسجل كل حاجة.",
+    title: "مفتاح تدفق المياه (الفلوسويتش - Flow Switch)",
+    whatIs: "حماية بتأكد سريان المياه: لو السريان وقف بيفصل الشيلر ويحمي المبخر.",
+    parts: ["ريشة (باديل) داخل الماسورة", "ذراع ميكانيكي", "نقطة تلامس كهربائية", "سكينة معايرة"],
+    check: ["مضخة واقفة = التلامس مفتوح", "مضخة شغالة = التلامس مقفول", "الريشة مش مكسورة أو متكلسة"],
+    commonFaults: ["شيلر بيفصل على تدفق = ريشة عاقة أو مكسورة", "مفيش إشارة = توصيلات أو تلامس"],
+    warn: "ممنوع توصيله جامد (باي باس) — المبخر ممكن يتجمد ويتفجر!",
+  ),
+  Guide(
+    id: "g-11",
+    title: "حساس الضغط والمانومتر (Pressure Sensor & Manometer)",
+    whatIs: "الحساس بيحول الضغط لإشارة 4-20 ملي أمبير للكنترول؛ المانومتر بيوريه ميكانيكي على الماسورة.",
+    parts: ["حساس Schneider مدى 0-16 بار", "مانومتر ميكانيكي", "محبس عزل تحت الحساس"],
+    check: ["قارن قراءته بالمانومتر", "فرق كبير = معايرة أو تغيير", "المحبس تحت الحساس مفتوح"],
+    commonFaults: ["قراءة صفر = توصيلات أو حساس", "قراءة ثابتة = مجرى مسدود"],
+    warn: "غيّر الحساس والدايرة منزّلة الضغط.",
+  ),
+  Guide(
+    id: "g-12",
+    title: "مضخات B&G — المكونات الداخلية",
+    whatIs: "مضخة طرد مركزي إنلاين رأسية: موتور فوق وريشة تحت على نفس العمود.",
+    parts: ["موتور كهربائي", "عمود وكوبلنج", "ريشة وموجهات", "مانع تسريب ميكانيكي", "رمان بلي"],
+    check: ["دوري: صوت وحرارة واهتزاز", "تشحيم البلي في ميعاده", "اتزان بعد أي تغيير موتور"],
+    commonFaults: ["خبط = كاويتيشن أو بلي", "تسريب تحت الموتور = ميكانيكال سيل", "أمبير عالي = ريشة مسدودة أو متآكلة"],
+    warn: "متشغلهاش من غير مياه ولا ثانية.",
+  ),
+  Guide(
+    id: "g-13",
+    title: "فحص وتبديل الميكانيكال سيل",
+    whatIs: "الجزء اللي بيمنع تسريب المياه على العمود — وش فحم ووش سيراميك بنابض.",
+    parts: ["وش ثابت", "وش دوّار", "نابض", "جلد مطاط"],
+    check: ["بص تحت المضخة: نقط بطيء = طبيعي أول العمر", "سريان مستمر = بايظ", "لون المياه: صدأ؟"],
+    commonFaults: ["تسريب كتير = تغيير فوري", "تسريب بعد وقف طويل = وشوك لازقين ممكن يفك مع التشغيل"],
+    warn: "التسريب على الكابلات أو الموتور = افصل فوراً.",
+  ),
+  Guide(
+    id: "g-14",
+    title: "فلتر الرملة Puroflux",
+    whatIs: "فلتر جانبي بياخد جزء من مياه الكوندنسر ويصفيها ويرجعها نظيفة.",
+    parts: ["جسم الفلتر برمل", "مضخة 10 حصان", "لوحة كنترول بسويتشات", "محابس عزل"],
+    check: ["شغال يومياً حسب البرنامج", "غسيل عكسي لحد ما الصرف يصفي", "مفيش تسريب فلنجات"],
+    commonFaults: ["فرق ضغط عالي = محتاج غسيل عكسي", "مياه معكرة بعد الغسيل = رمل معمل قنوات"],
+    warn: "بدّل المحابس والمضخة واقفة.",
+  ),
+  Guide(
+    id: "g-15",
+    title: "تنظيف حوض برج التبريد",
+    whatIs: "الحوض بيجمع المياه المبردة؛ الترسيب فيه بيسد الفيل وياكل النظام.",
+    parts: ["الحوض", "حشو التبريد (الفيل)", "مانعات التطاير", "محابس تفوير وتصريف"],
+    check: ["مياه صافية مش معكرة", "مفيش طين بقاع الحوض", "الفيل مش مسدود"],
+    commonFaults: ["مياه معكرة = ظبط جرعات وتفوير", "طين = نظف واغسل"],
+    warn: "متدخلش الحوض والمياه بتدور — افصل المضخات الأول.",
+  ),
+  Guide(
+    id: "g-16",
+    title: "العزل الكهربائي (Lockout/Tagout)",
+    whatIs: "إجراء بيضمن إن مفيش كهرباء واصلة للمعدة قبل الشغل — قاعدة حياة.",
+    parts: ["القاطع الرئيسي", "قفل شخصي", "لافتة تحذير", "جهاز قياس"],
+    check: ["افصل القاطع", "اقفل وعلّق لافتة", "اختبر بنفسك بالقياس", "فضّي المكثفات"],
+    commonFaults: ["تخطي أي خطوة = حادثة"],
+    warn: "ممنوع الشغل من غير عزل مهما الاستعجال.",
+  ),
+  Guide(
+    id: "g-17",
+    title: "خزان التمدد Reflex",
+    whatIs: "خزان بغشاء مطاطي ونيتروجين بيتمدد مع مياه النظام ويحافظ على الضغط ثابت.",
+    parts: ["جسم صلب", "غشاء مطاطي (ممبرين)", "بلف شحن نيتروجين فوق", "وصلة مياه تحت"],
+    check: ["ضغط النيتروجين 2 بار (والنظام واقف ومفضي)", "مفيش مياه طالعة من بلف النيتروجين (الغشاء سليم)"],
+    commonFaults: ["ضغط صفر = الغشاء مخروم", "ضغط بيقع كتير = تسريب بطيء بالبلف"],
+    warn: "متشحنش نيتروجين والخزان مليان مياه.",
+  ),
+  Guide(
+    id: "g-18",
+    title: "مضخة التعويض Wilo",
+    whatIs: "مضخة رأسية متعددة المراحل بتعوض أي نقص مياه وتحافظ على ضغط النظام.",
+    parts: ["مضخة Wilo رأسية", "لوحة كنترول بشاشة لمس", "صمام عدم رجوع على الطرد", "محابس عزل"],
+    check: ["أوتو = PID بيحافظ على الضغط", "مفيش صوت غير طبيعي", "مفيش تسريب بالوصلات"],
+    commonFaults: ["مش بتضبط ضغط = هوا محبوس أو صمام عدم رجوع عالق", "بتفصل وتشتغل كتير = ضبط أو خزان ضغط"],
+    warn: "متشغلهاش ناشفة.",
+  ),
+  Guide(
+    id: "g-19",
+    title: "كيفية عمل Leak Test وملء الفريون",
+    whatIs: "إجراء اختبار تسريب وملء الفريون بعد إصلاح أي تسريب أو صيانة.",
+    parts: ["اسطوانة نيتروجين مع ريجيليتور", "صابون اختبار تسريب", "جهاز كشف تسريب إلكتروني", "مضخة تفريغ (Vacuum Pump)", "ميزان وزن الفريون"],
+    check: ["قف الشيلر وافصل الباور", "اضغط نيتروجين 300 PSI", "استخدم صابون على كل الجوينات والفلنجات", "لو مفيش فقاعات: انتظر 30 دقيقة وشوف الـ Pressure Drop", "لو مفيش Drop: ابدأ التفريغ (Vacuum)", "اشحن الفريون بالوزن المكتوب على الـ Nameplate"],
+    commonFaults: ["فقاعات = فيه تسريب! علّم المكان", "Vacuum ما بيثبتش = فيه تسريب صغير", "بعد الشحن: سوبرهيت عالي = شحن ناقص", "بعد الشحن: سبكولينج واطي = شحن زايد"],
+    warn: "ممنوع لحام والشيلر شغال أو فيه ضغط — نزّله الأول! لبس PPE إلزامي.",
+  ),
+  Guide(
+    id: "g-20",
+    title: "كيفية قراءة منحنى المضخة (Pump Curve)",
+    whatIs: "المنحنى بيبين العلاقة بين التدفق والضغط للمضخة — مهم لفهم أداء المضخة.",
+    parts: ["محور أفقي: التدفق (Flow Rate) م³/ساعة أو GPM", "محور عمودي: الرأس (Head) متر أو قدم", "منحنيات الأقطار المختلفة", "منحنى الكفاءة (Efficiency)", "منحنى القدرة (Power)"],
+    check: ["اجلب الـ Pump Curve من الكتالوج", "حدد الـ Impeller Diameter المركب", "قس الـ Actual Flow والـ Actual Pressure", "ارسم نقطة التقاطع على الـ Curve", "لو النقطة على الـ Curve = المضخة شغالة كويس", "لو النقطة يمين = Resistance أقل (أكتر Flow)", "لو النقطة شمال = Resistance أكتر (أقل Flow)"],
+    commonFaults: ["بعيد عن BEP = كفاءة واطية وتآكل", "النقطة على الحد الأحمر = خطر على المضخة", "Impeller كبير أوي = أمبير عالي وقدرة زيادة"],
+    warn: "لا تشغل المضخة خارج المدى الآمن للمنحنى — ده بيسبب اهتزاز وتآكل.",
   ),
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// HELPER FUNCTIONS
+// EMERGENCY FAULTS — Critical faults needing immediate action
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/// Returns faults for a specific category
-List<Fault> getFaultsByCategory(String categoryId) {
-  return allFaults.where((f) => f.categoryId == categoryId).toList();
-}
+const List<String> emergencyFaultIds = [
+  'ch-01', 'ch-03', 'ch-04',
+  'pp-03', 'pp-04', 'pp-05',
+  'ct-03', 'ct-05',
+  'dv-01', 'dv-02',
+  'wt-02',
+  'et-01', 'et-03', 'et-05',
+];
 
-/// Returns a category by its ID
-EquipmentCategory? getCategoryById(String id) {
-  try {
-    return categories.firstWhere((c) => c.id == id);
-  } catch (_) {
-    return null;
-  }
-}
+// ═══════════════════════════════════════════════════════════════════════════════
+// COLLOQUIAL TERMS DICTIONARY — Technical terms in Egyptian Arabic
+// ═══════════════════════════════════════════════════════════════════════════════
 
-/// Search faults by keyword (Arabic or English)
-List<Fault> searchFaults(String query) {
-  final lowerQuery = query.toLowerCase();
-  return allFaults.where((fault) {
-    // Search in title
-    if (fault.title.toLowerCase().contains(lowerQuery)) return true;
-    // Search in keywords
-    for (final keyword in fault.keywords) {
-      if (keyword.toLowerCase().contains(lowerQuery)) return true;
-    }
-    // Search in cause
-    if (fault.cause.toLowerCase().contains(lowerQuery)) return true;
-    // Search in solution
-    if (fault.solution.toLowerCase().contains(lowerQuery)) return true;
-    return false;
-  }).toList();
-}
-
-/// Returns total fault count
-int get totalFaults => allFaults.length;
-
-/// Returns total guide count
-int get totalGuides => allGuides.length;
-
-/// Returns faults count per category
-int getFaultCount(String categoryId) {
-  return allFaults.where((f) => f.categoryId == categoryId).length;
-}
+const Map<String, String> colloquialTerms = {
+  'Pump': 'مضخة (بامب/بومبة)',
+  'Chiller': 'شيلر (وحدة تبريد مركزية)',
+  'Compressor': 'كمبروسر (ضاغط)',
+  'Bearing': 'رمان بلي (بيرنج/كرة)',
+  'Seal': 'سيل (مانع تسريب)',
+  'Mechanical Seal': 'ميكانيكال سيل (مانع تسريب ميكانيكي)',
+  'Strainer': 'مصفاة (سترينر)',
+  'Filter': 'فلتر (منقي)',
+  'Valve': 'صمام/محبس (فالف)',
+  'Actuator': 'مشغل (أكتواتور)',
+  'Drive': 'درايف/إنفرتر (محول تردد)',
+  'VFD': 'درايف/إنفرتر (محول تردد)',
+  'Inverter': 'إنفرتر/درايف (محول تردد)',
+  'Cooling Tower': 'برج تبريد (كولينج تاور)',
+  'Evaporator': 'مبخر (إيفابوريتر)',
+  'Condenser': 'مكثف (كوندنسر)',
+  'Expansion Tank': 'خزان تمدد (إكسبانشن تنك)',
+  'Flow Switch': 'فلوسويتش (مفتاح تدفق)',
+  'Sight Glass': 'عدسة بيان/سايت جلاس',
+  'Gauge': 'ميزان/جيج',
+  'Thermostat': 'ترموستات (منظم حرارة)',
+  'Pressure Relief Valve': 'صمام أمان (PRV)',
+  'Triple Duty Valve': 'صمام ثلاث وظائف',
+  'Suction Diffuser': 'مشتت سحب',
+  'Coupling': 'كوبلنج (وصلة مرنة)',
+  'Impeller': 'ريشة (إمبرلر)',
+  'Freon': 'فريون (غاز تبريد/ريفرجيرانت)',
+  'Refrigerant': 'فريون (غاز تبريد)',
+  'Surge': 'سيرج (زن/اهتزاز في الكمبروسر)',
+  'Cavitation': 'تكهف (كاويتيشن - دخول هواء)',
+  'Lockout': 'لوك أوت (قفل حماية)',
+  'Alarm': 'إنذار (تنبيه)',
+  'BMS': 'نظام إدارة المبنى',
+  'PLC': 'بلس/كونترولر (متحكم منطقي)',
+  'Contactor': 'كنتاكتور (مفتاح تحكم مغناطيسي)',
+  'Overload': 'أوفرلود (حمل زايد)',
+  'Short Circuit': 'شورت (قصر كهربي)',
+  'Phase': 'فاز/فيز (طور)',
+  'Ampere': 'أمبير (تيار كهربي)',
+  'Voltage': 'فولت (جهد كهربي)',
+  'Capacitor': 'كاباسيتور/مكثف',
+  'Relay': 'ريلاي (وحدة تحكم)',
+  'Fuse': 'فيوز (مصهر)',
+  'Isolator': 'أيزوليتور (قاطع عزل)',
+  'Gasket': 'جوان/جلدة (حلقة مانعة للتسريب)',
+  'Flange': 'فلنجة (وصلة ماسورة)',
+  'Welding': 'لحام',
+  'Nitrogen': 'نيتروجين (غاز اختبار ضغط)',
+  'Vacuum': 'فاكيوم (تفريغ)',
+  'Superheat': 'سوبرهيت (فرط تسخين)',
+  'Subcooling': 'سبكولينج (تبريد زائد)',
+  'Head Pressure': 'ضغط عالي (هد بريسير)',
+  'Suction Pressure': 'ضغط سحب (سكشن بريسير)',
+  'Oil Pressure': 'ضغط زيت',
+  'Conductivity': 'توصيلية (كونداكتفيتي)',
+  'Bleed': 'تفوير/تصريف (بليد)',
+  'Biocide': 'بايوسيد (مضاد بكتيريا/طحالب)',
+  'Flow Rate': 'تدفق (فلو ريت)',
+  'Head': 'رأس (ضغط المضخة بالمتر)',
+  'Efficiency': 'كفاءة (إفشنسي)',
+  'Motor': 'موتور (محرك كهربي)',
+  'Fan': 'فان/مروحة',
+  'Gearbox': 'جيربوكس/علبة تروس',
+  'Fill': 'فيل/حشو (تعبئة برج التبريد)',
+  'Drift Eliminator': 'مانع تطاير',
+  'Basin': 'حوض (قاعدة البرج)',
+  'Bladder': 'غشاء/ممبرين (في خزان التمدد)',
+  'Pre-charge': 'شحن أولي (ضغط النيتروجين)',
+  'Water Hammer': 'طرق مائية (ووتر هامر)',
+  'Air Eliminator': 'منزع هواء',
+  'Scale': 'ترسيب/كلس (سكيل)',
+  'Corrosion': 'تآكل (كوروجن)',
+  'Flush': 'فلوش/غسيل',
+  'Torque': 'عزم (شد بمفتاح عزم)',
+  'Endoscope': 'إندوسكوب (كاميرا داخلية)',
+  'Nameplate': 'لوحة بيانات (نيم بليت)',
+  'AHU': 'وحدة معالجة هواء (AHU)',
+  'FCU': 'وحدة فن كويل (FCU)',
+  'Chilled Water': 'مياه مبردة (تشيلد ووتر)',
+  'Condenser Water': 'مياه كوندنسر',
+  'Reset': 'ريست (إعادة تعيين)',
+  'Lockout/Tagout': 'عزل كهربائي (لوك أوت/تاج أوت)',
+};
