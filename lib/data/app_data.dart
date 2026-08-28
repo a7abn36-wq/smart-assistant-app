@@ -31,7 +31,6 @@ const List<EquipmentCategory> categories = [
     nameEn: "Chillers",
     icon: "\u2744\uFE0F",
     color: 0xFF00E5FF,
-    severity: 'warning',
   ),
   EquipmentCategory(
     id: "primaryPumps",
@@ -39,7 +38,6 @@ const List<EquipmentCategory> categories = [
     nameEn: "Primary Pumps",
     icon: "\uD83D\uDCA7",
     color: 0xFF448AFF,
-    severity: 'warning',
   ),
   EquipmentCategory(
     id: "condenserPumps",
@@ -47,7 +45,6 @@ const List<EquipmentCategory> categories = [
     nameEn: "Condenser Pumps",
     icon: "\uD83C\uDF0A",
     color: 0xFF2979FF,
-    severity: 'warning',
   ),
   EquipmentCategory(
     id: "secondaryPumps",
@@ -55,7 +52,6 @@ const List<EquipmentCategory> categories = [
     nameEn: "Secondary Pumps",
     icon: "\uD83D\uDCA0",
     color: 0xFF00B0FF,
-    severity: 'warning',
   ),
   EquipmentCategory(
     id: "coolingTowers",
@@ -63,7 +59,6 @@ const List<EquipmentCategory> categories = [
     nameEn: "Cooling Towers",
     icon: "\uD83C\uDF21\uFE0F",
     color: 0xFF18FFFF,
-    severity: 'warning',
   ),
   EquipmentCategory(
     id: "drives",
@@ -71,7 +66,6 @@ const List<EquipmentCategory> categories = [
     nameEn: "VFD Drives",
     icon: "\u26A1",
     color: 0xFFFFAB00,
-    severity: 'warning',
   ),
   EquipmentCategory(
     id: "valves",
@@ -79,7 +73,6 @@ const List<EquipmentCategory> categories = [
     nameEn: "Valves",
     icon: "\uD83D\uDD27",
     color: 0xFFFF6D00,
-    severity: 'warning',
   ),
   EquipmentCategory(
     id: "waterTreatment",
@@ -87,7 +80,6 @@ const List<EquipmentCategory> categories = [
     nameEn: "Water Treatment",
     icon: "\uD83D\uDCA7",
     color: 0xFF76FF03,
-    severity: 'warning',
   ),
   EquipmentCategory(
     id: "expansionTank",
@@ -95,7 +87,6 @@ const List<EquipmentCategory> categories = [
     nameEn: "Expansion Tank",
     icon: "\uD83D\uDEE0\uFE0F",
     color: 0xFFB388FF,
-    severity: 'warning',
   ),
 ];
 
@@ -1524,3 +1515,49 @@ const Map<String, String> colloquialTerms = {
   'Reset': 'ريست (إعادة تعيين)',
   'Lockout/Tagout': 'عزل كهربائي (لوك أوت/تاج أوت)',
 };
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// HELPER FUNCTIONS — Search, Filter, Lookup
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/// Search faults by query (Arabic + English keywords + title)
+List<Fault> searchFaults(String query) {
+  if (query.isEmpty) return [];
+  final q = query.toLowerCase();
+  return allFaults.where((f) {
+    if (f.title.toLowerCase().contains(q)) return true;
+    if (f.cause.toLowerCase().contains(q)) return true;
+    for (final kw in f.keywords) {
+      if (kw.toLowerCase().contains(q)) return true;
+    }
+    // Also search colloquial terms
+    for (final entry in colloquialTerms.entries) {
+      if (entry.key.toLowerCase().contains(q) || entry.value.contains(q)) {
+        if (f.title.contains(entry.key) || f.title.contains(entry.value) ||
+            f.cause.contains(entry.key) || f.cause.contains(entry.value)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }).toList();
+}
+
+/// Get fault count for a category
+int getFaultCount(String categoryId) {
+  return allFaults.where((f) => f.categoryId == categoryId).length;
+}
+
+/// Get all faults for a category
+List<Fault> getFaultsByCategory(String categoryId) {
+  return allFaults.where((f) => f.categoryId == categoryId).toList();
+}
+
+/// Get category by ID
+EquipmentCategory? getCategoryById(String id) {
+  try {
+    return categories.firstWhere((c) => c.id == id);
+  } catch (_) {
+    return null;
+  }
+}
