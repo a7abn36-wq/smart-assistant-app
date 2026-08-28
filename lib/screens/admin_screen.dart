@@ -161,9 +161,17 @@ class _AdminScreenState extends State<AdminScreen> {
         const SizedBox(height: 12), _buildLabel('الحل (كل خطوة في سطر)'), const SizedBox(height: 6), _buildFormField(controller: _solutionController, hint: 'اكتب خطوات الحل...', maxLines: 5),
         const SizedBox(height: 12), _buildLabel('كلمات مفتاحية'), const SizedBox(height: 6), _buildFormField(controller: _keywordsController, hint: 'كلمة1, كلمة2, keyword1'),
         const SizedBox(height: 20),
-        SizedBox(width: double.infinity, child: ElevatedButton.icon(onPressed: _saveFault, icon: const Icon(Icons.save, size: 22),
+        SizedBox(width: double.infinity, child: ElevatedButton.icon(
+          onPressed: _saveFault,
+          icon: const Icon(Icons.save, size: 22),
           label: const Text('حفظ العطل', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.darkBg)),
-          style: ElevatedButton.styleFrom(backgroundColor: AppTheme.greenNeon, foregroundColor: AppTheme.darkBg, padding: const EdgeInsets.symmetric(vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)))),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppTheme.greenNeon,
+            foregroundColor: AppTheme.darkBg,
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        )),
         if (_newFaults.isNotEmpty) ...[
           const SizedBox(height: 16),
           Container(width: double.infinity, padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: AppTheme.cardBg, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppTheme.greenNeon.withOpacity(0.3))),

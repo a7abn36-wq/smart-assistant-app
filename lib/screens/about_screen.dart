@@ -23,8 +23,15 @@ class AboutScreen extends StatelessWidget {
               child: ClipOval(child: Image.asset('assets/images/logo.jpg', fit: BoxFit.cover)),
             ),
             const SizedBox(height: 20),
-            const Text('المساعد الذكي', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: AppTheme.greenNeon),
-              shadows: [Shadow(color: AppTheme.greenNeon, blurRadius: 15)]),
+            const Text(
+              'المساعد الذكي',
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.w900,
+                color: AppTheme.greenNeon,
+                shadows: [Shadow(color: AppTheme.greenNeon, blurRadius: 15)],
+              ),
+            ),
             const SizedBox(height: 8),
             const Text('Smart Assistant', style: TextStyle(fontSize: 16, color: AppTheme.cyanGlow)),
             const SizedBox(height: 4),
