@@ -1225,6 +1225,162 @@ List<Fault> allFaults = [
     ],
     severity: 'critical',
   ),
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // أعطال مخصصة لمحطة ترين CVHF1300 — TRANE CENTRAVAC SPECIFIC FAULTS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  Fault(
+    id: "ch-09",
+    categoryId: "chillers",
+    title: "الشيلر بيعمل Surge (سيرج - تذبذب الضغط) على الحمل الواطي",
+    warning: "⚠️ السيرج (Surge) ده تذبذب في الضغط بيعمل صوت زززز وده ممكن يدمر الـ Impeller (العجلة) والـ Bearings (المحامل) في دقايق! لو السيرج مستمر أكتر من 30 ثانية قف الشيلر فوراً!",
+    cause: "السبب: الحمل على الشيلر قليل أوي (Low Load - حمل واطي) والـ Guide Vanes (ريش المدخل) مش بتتحكم كويس، أو الـ Condenser Pressure (ضغط المكثف) عالي، أو الـ Hot Gas Bypass (صمام التحويل) مش شغال.",
+    solution: """١. قف السيرج فوراً — افتح الـ Hot Gas Bypass (صمام تحويل الغاز الساخن) لو موجود
+٢. زوّد الحمل على الشيلر (شغّل Pumps مضخات و AHUs وحادات هواء)
+٣. اتأكد من الـ Guide Vane Position (وضع ريش المدخل) ماشي بالـ PID Output
+٤. قلل الـ Condenser Pressure (ضغط المكثف) بنظف الكوندنسر أو زوّد مية التبريد
+٥. اتأكد من الـ Surge Setpoint (نقطة السيرج) في الـ CH530 Controller
+٦. لو السيرج مستمر اتعامل مع الـ OEM (الشركة الأم) لأن ده ممكن Impeller Problem""",
+    keywords: ["سيرج", "surge", "تذبذب", "guide vanes", "hot gas bypass", "low load", "impeller", "centrifugal", "CH530", "سنترا فاك", "CenTraVac"],
+    severity: 'critical',
+  ),
+
+  Fault(
+    id: "ch-10",
+    categoryId: "chillers",
+    title: "شاشة CH530 Controller (التحكم) بتطلع Error Code (كود خطأ) مش معروف",
+    warning: "⚠️ الـ Error Code (كود الخطأ) في الـ CH530 معناه إن في مشكلة حقيقية! متعملش Reset (ريست) كتير من غير ما تعرف السبب — ده ممكن يخفي المشكلة الحقيقية.",
+    cause: "السبب: الـ Microprocessor Board (لوحة المعالج) فيها Problem، أو الـ Sensors (الحساسات) فالسة، أو الـ 24VDC Power Supply (مصدر الطاقة) ضعيف، أو الـ EEPROM Data (بيانات الذاكرة) اتمسحت.",
+    solution: """١. سجل الـ Error Code (الكود) بالزبط من الشاشة
+٢. راجع الـ Trane Service Manual (كتيب صيانة ترين) وابحث عن الكود
+٣. لو الكود مش موجود، اتصل بـ Trane OEM Support (دعم ترين)
+٤. شيك الـ 24VDC Power Supply للـ Controller Board (لوحة التحكم)
+٥. اتأكد من الـ Sensor Readings (قراءات الحساسات) وإنها منطقية
+٦. ريست من الـ Main Power (الباور الرئيسي) بس مرة واحدة بس""",
+    keywords: ["CH530", "error code", "كود خطأ", "controller", "ترين", "Trane", "sensor", "EEPROM", "microprocessor"],
+    severity: 'warning',
+  ),
+
+  Fault(
+    id: "ch-11",
+    categoryId: "chillers",
+    title: "الفريون HFO-514A ناقص — Low Refrigerant Charge (شحن الفريون قليل)",
+    warning: "⚠️ الفريون ناقص معناه في تسريب! غاز HFO-514A ده غالي أوي وممنوع يتسرب. كمان الشيلر مش هيبرد كويس والكمبريسور ممكن يحترق!",
+    cause: "السبب: تسريب من الـ Evaporator Tubes (أنابيب المبخر) أو الـ Flanges (الفلانجات) أو الـ Schrader Valves (صمامات الشحن) أو الـ Relief Valve (صمام الأمان) بيفتح.",
+    solution: """١. قف الشيلر واعمل Leak Test (اختبار تسريب) بـ Nitrogen (نيتروجين)
+٢. استخدم Electronic Leak Detector (كاشف تسريب إلكتروني) على كل الـ Joints
+٣. لو لقيت تسريب صلحه واعمل Evacuation (تفريغ) بالـ Vacuum Pump (مضخة تفريغ)
+٤. شحن الفريون HFO-514A بالوزن الصح — 1500 lbs (680 kg) شحن المصنع
+٥. قس الـ Subcooling (تحت التبريد) والـ Superheat (فوق التبريد) واتأكد صح
+٦. سجل كمية الفريون اللي اتحطت و历史的 التسريب""",
+    keywords: ["فريون ناقص", "HFO-514A", "leak test", "تسريب", "refrigerant", "evacuation", "vacuum", "subcooling", "superheat", "شحن فريون"],
+    severity: 'critical',
+  ),
+
+  Fault(
+    id: "ch-12",
+    categoryId: "chillers",
+    title: "سخان الزيت (Oil Heater) مش شغال — الزيت بيلزق والموتور بيسخن",
+    warning: "⚠️ سخان الزيت (Oil Heater) لازم يشتغل 24 ساعة قبل تشغيل الشيلر! لو الزيت بارد وفيه فريون مختلط (Dilution - تخفيف) الكمبريسور هيتكسر!",
+    cause: "السبب: الـ Oil Heater (سخان الزيت) 115V/750W احترق، أو الـ Contactor (الكونتاكتور) مش بيوصل التيار، أو الـ Thermostat (الترموستات) فالس.",
+    solution: """١. قس الـ Voltage (الفولت) على الـ Oil Heater طرفين — لازم يكون 115V
+٢. لو مفيش فولت: شيك الـ Contactor والـ Thermostat
+٣. لو فيه فولت بس مش بيسخن: الـ Heater احترق — غيره
+٤. قبل تشغيل الشيلر: خلي الـ Oil Heater يشتغل 24 ساعة
+٥. اتأكد إن الزيت رجع للونه الطبيعي (مش رغوي — Foam يعني فيه فريون)
+٦. سجل تاريخ تغيير الـ Oil Heater في سجل الصيانة""",
+    keywords: ["سخان زيت", "oil heater", "زيت بارد", "dilution", "تخفيف", "contactor", "thermostat", "زيت رغوي"],
+    severity: 'warning',
+  ),
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // أعطال مخصصة لمضخات B&G — BELL & GOSSETT SPECIFIC FAULTS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  Fault(
+    id: "pp-07",
+    categoryId: "primaryPumps",
+    title: "المضخة B&G بتسرب من الـ Mechanical Seal (السيل الميكانيكي) — تسريب مستمر",
+    warning: "⚠️ التسريب أكتر من Drop/minute (قطره في الدقيقة) معناه الـ Seal (السيل) خلاص! لو خليت المضخة بتسرب كتير الميه توصل للموتور وتحرق.",
+    cause: "السبب: الـ Seal Faces (وجوه السيل) اتآكلت من الـ Wear (التآكل)، أو الـ Shaft (العمود) فيه Groove (خدش)، أو المضخة اتشغلت Dry (من غير ميه) — ده بيحرق السيل في ثواني!",
+    solution: """١. قف المضخة وافصل الباور فوراً
+٢. افتح الـ Seal Chamber (غرفة السيل) وشوف وجوه السيل
+٣. لو الـ Seal Faces خشنة أو محروقة — غيّر الـ Seal Assembly (طقم السيل) كله
+٤. شيك الـ Shaft Runout (تمايل العمود) — لازم أقل من 0.002 بوصة
+٥. اتأكد من الـ Alignment (المحاذاة) بين الموتور والمضخة
+٦. بعد التركيب شغل المضخة وشوف التسريب — Drop/minute بس المقبول""",
+    keywords: ["تسريب سيل", "mechanical seal", "B&G", "seal leakage", "seal faces", "dry running", "shaft runout", "بيل آند جوسيت"],
+    severity: 'warning',
+  ),
+
+  Fault(
+    id: "pp-08",
+    categoryId: "primaryPumps",
+    title: "المضخة B&G الكبيرة (3000 GPM) بتتعمل Cavitation (كافيتيشن — فقاعات بخار)",
+    warning: "⚠️ الكافيتيشن (Cavitation) بيعمل صوت زي الحصى بيضرب جوا المضخة! ده بيكسر الـ Impeller (العجلة) والـ Seal (السيل) في وقت قصير. قف المضخة فوراً!",
+    cause: "السبب: الـ NPSH Available (الضغط على الساكشن) أقل من الـ NPSH Required (الضغط المطلوب)، أو الـ Strainer (الفلتر) مسدود، أو الـ Suction Valve (صمام الساكشن) مقفول جزئياً.",
+    solution: """١. قف المضخة فوراً لما تسمع صوت الكافيتيشن
+٢. نظف الـ Strainer (الفلتر) على خط الساكشن بالكامل
+٣. افتح الـ Suction Valve (صمام الساكشن) بالكامل
+٤. اتأكد من مستوى الميه في الـ Expansion Tank (خزان التمدد)
+٥. Bleed (نزع) الهواء من أعلى المضخة ومن الـ High Points (النقاط العالية)
+٦. لو المشكلة مستمرة: شيك الـ NPSH وقارنه بالـ Pump Curve (منحنى المضخة)""",
+    keywords: ["كافيتيشن", "cavitation", "NPSH", "strainer", "suction", "فقاعات", "صوت حصى", "B&G", "3000 GPM"],
+    severity: 'critical',
+  ),
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // أعطال مخصصة لمحركات FELM — FELM MOTOR SPECIFIC FAULTS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  Fault(
+    id: "dr-07",
+    categoryId: "drives",
+    title: "محرك FELM بيسخن أوي والـ Surface Temperature (حرارة السطح) أعلى من 80°C",
+    warning: "⚠️ الموتور لو سخن أكتر من 80°C على السطح يبقى في مشكلة! الـ Insulation Class F (فئة العزل) بيتحمل لحد 155°C جوا بس السطح لازم يكون أقل. لو سخن أكتر ممكن يحترق!",
+    cause: "السبب: الحمل زايد (Overload)، أو الـ Bearings (المحامل) ناقصة شحم، أو الـ Ventilation (التهوية) مش كويس — الفان (المروحة) بتاعة التبريد واقفة، أو الـ Voltage (الفولت) واطي.",
+    solution: """١. قس الـ Surface Temperature بـ IR Gun (مسدس حرارة بالأشعة تحت الحمراء)
+٢. قس الـ Amps بـ Clamp Meter — لازم تكون أقل من الـ Nameplate Current
+٣. شيك الـ Cooling Fan (مروحة التبريد) — لازم تدور وتدفع هواء
+٤. شيك الـ Grease Nipples (بمبات الشحم) — ممكن محامل ناقصة شحم
+٥. اتأكد من الـ Voltage (الفولت) — لو أقل من 380V يبقى في مشكلة في الشبكة
+٦. لو الحرارة على الـ Bearings أعلى من 90°C — غيّر الـ Bearings فوراً""",
+    keywords: ["موتور ساخن", "FELM", "overheat", "IR gun", "bearing temperature", "cooling fan", "surface temperature", "محرك بيسخن"],
+    severity: 'critical',
+  ),
+
+  Fault(
+    id: "dr-08",
+    categoryId: "drives",
+    title: "محرك FELM بيطلع Phase Imbalance (عدم توازن الأطوار) — تيار مش متساوي",
+    warning: "⚠️ عدم توازن الأطوار (Phase Imbalance) بيسخن الموتور من جوا وبيقلل عمره أوي! لو الفرق أكتر من 2% لازم تصلح المشكلة فوراً.",
+    cause: "السبب: الحمل على Phase (طور) واحد أكتر من التاني، أو الـ Connections (التوصيلات) فيها مشكلة، أو الـ Contactor (الكونتاكتور) نقاطه متآكلة، أو الـ Supply Voltage (جهد الشبكة) مش متوازن.",
+    solution: """١. قس الـ Amps على الـ 3 Phases بـ Clamp Meter (أمبير كلامب)
+٢. احسب الـ Phase Imbalance % = (أعلى تيار - المتوسط) / المتوسط × 100
+٣. لو أكتر من 2%: شيك الـ Contactor Points (نقاط الكونتاكتور)
+٤. قس الـ Phase Voltages (فولت كل طور) — لازم الفرق أقل من 2%
+٥. شيك الـ Cable Connections (توصيلات الكابل) واتأكد إنها مش محترقة
+٦. لو المشكلة من الـ Supply (الشبكة) — بلّغ الـ Electrical Dept (قسم الكهرباء)""",
+    keywords: ["phase imbalance", "عدم توازن", "3 phases", "أطوار", "contactor", "FELM", "voltage imbalance", "تيار مش متساوي"],
+    severity: 'warning',
+  ),
+
+  Fault(
+    id: "dr-09",
+    categoryId: "drives",
+    title: "محامل الموتور FELM بتعمل صوت طحن — Bearings Failing (المحامل خربانة)",
+    warning: "⚠️ صوت الطحن (Grinding Noise) من المحامل معناه خربانة ومحتاجة تتغير فوراً! لو خليتها الموتور هيقف ويمكن يحترق.",
+    cause: "السبب: الـ Bearings (المحامل) اتآكلت من قلة الشحم أو كترته، أو دخلت ميه أو أوساخ جواها، أو الـ Misalignment (عدم محاذاة) بين الموتور والمضخة.",
+    solution: """١. قف الموتور فوراً — متشغلوش تاني لحد ما تغير المحامل
+٢. خد قراءة Vibration (اهتزاز) على الـ DE و NDE Bearings
+٣. فك الموتور وابعت المحامل للـ Machine Shop (ورشة خراطة)
+٤. ركب محامل جديدة من نفس النوع والـ Size (الحجم)
+⑤. اعمل Alignment (محاذاة) جديد بين الموتور والمضخة
+٦. شحم المحامل الجديدة بالشحم الصح CALTEX SRI-2""",
+    keywords: ["محامل", "bearings", "صوت طحن", "grinding", "FELM", "misalignment", "vibration", "bearing failure"],
+    severity: 'critical',
+  ),
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1460,7 +1616,7 @@ const Map<String, String> colloquialTerms = {
   'Impeller': 'ريشة (إمبرلر)',
   'Freon': 'فريون (غاز تبريد/ريفرجيرانت)',
   'Refrigerant': 'فريون (غاز تبريد)',
-  'Surge': 'سيرج (زن/اهتزاز في الكمبروسر)',
+  'Surge': 'سيرج (تذبذب الضغط في الشيلر)',
   'Cavitation': 'تكهف (كاويتيشن - دخول هواء)',
   'Lockout': 'لوك أوت (قفل حماية)',
   'Alarm': 'إنذار (تنبيه)',
@@ -1514,6 +1670,27 @@ const Map<String, String> colloquialTerms = {
   'Condenser Water': 'مياه كوندنسر',
   'Reset': 'ريست (إعادة تعيين)',
   'Lockout/Tagout': 'عزل كهربائي (لوك أوت/تاج أوت)',
+  'HFO-514A': 'فريون إتش إف أو 514 إيه (غاز تبريد صديق للبيئة)',
+  'CenTraVac': 'سنترا فاك (سلسلة شيلرات ترين)',
+  'CVHF1300': 'سي في إتش إف 1300 (موديل الشيلر)',
+  'CH530': 'سي إتش 530 (شاشة تحكم ترين)',
+  'Guide Vanes': 'ريش مدخل (بتتحكم في تدفق الفريون)',
+  'Hot Gas Bypass': 'صمام تحويل الغاز الساخن (بيمنع السيرج)',
+  'GPM': 'جالون في الدقيقة (وحدة قياس التدفق)',
+  'TDH': 'تي دي إتش - الرأس الديناميكي الكلي (ارتفاع الميه)',
+  'TEFC': 'تي إف سي - مغلق بالكامل ومبرد بمروحة (نوع الموتور)',
+  'IE3': 'آي إي 3 - كفاءة عالية (Premium Efficiency)',
+  'IP55': 'آي بي 55 - محمي من الغبار والرشاشات',
+  'NLGI Grade 2': 'إن إل جي آي 2 - درجة قوام الشحم',
+  'CALTEX SRI-2': 'كالتكس إس آر آي 2 (شحم صناعي عالي الأداء)',
+  'DE Bearing': 'محمل نهاية الدوران (Drive End)',
+  'NDE Bearing': 'محمل الناحية التانية (Non-Drive End)',
+  'Oil Heater': 'سخان الزيت (بيسخن الزيت قبل تشغيل الشيلر)',
+  'Dilution': 'تخفيف (فريون مختلط مع الزيت)',
+  'Dead Head': 'ضغط ميت (المضخة شغالة والصمام مقفول)',
+  'Phase Imbalance': 'عدم توازن الأطوار (تيار مش متساوي)',
+  'IR Gun': 'مسدس حرارة بالأشعة تحت الحمراء',
+  'Clamp Meter': 'أمبير كلامب (جهاز قياس التيار)',
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════

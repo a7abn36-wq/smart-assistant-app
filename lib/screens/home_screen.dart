@@ -6,6 +6,9 @@ import 'guides_screen.dart';
 import 'reports_screen.dart';
 import 'admin_screen.dart';
 import 'about_screen.dart';
+import 'equipment_screen.dart';
+import 'pm_screen.dart';
+import 'chat_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -170,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Quick Action Buttons
+              // Quick Action Buttons — الصف الأول
               Row(
                 children: [
                   Expanded(
@@ -203,6 +206,47 @@ class _HomeScreenState extends State<HomeScreen> {
                             Icon(Icons.description, color: AppTheme.fireRed),
                             SizedBox(width: 8),
                             Text('تقرير جديد', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              // Quick Action Buttons — الصف التاني
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const EquipmentScreen())),
+                      child: Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: AppTheme.glowBox(AppTheme.greenNeon, blur: 12, op: 0.25),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.precision_manufacturing, color: AppTheme.greenNeon),
+                            SizedBox(width: 8),
+                            Text('معدات المحطة', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PMScreen())),
+                      child: Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: AppTheme.glowBox(AppTheme.amber, blur: 12, op: 0.25),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.schedule, color: AppTheme.amber),
+                            SizedBox(width: 8),
+                            Text('جدول الصيانة', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
                           ],
                         ),
                       ),
@@ -347,6 +391,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     leading: const Icon(Icons.description, color: AppTheme.cyanGlow),
                     title: const Text('التقارير', style: TextStyle(color: Colors.white)),
                     onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const ReportsScreen())); },
+                  ),
+                  const Divider(color: AppTheme.subtleBorder),
+                  ListTile(
+                    leading: const Icon(Icons.precision_manufacturing, color: AppTheme.greenNeon),
+                    title: const Text('معدات المحطة', style: TextStyle(color: Colors.white)),
+                    onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const EquipmentScreen())); },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.schedule, color: AppTheme.amber),
+                    title: const Text('جدول الصيانة', style: TextStyle(color: Colors.white)),
+                    onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const PMScreen())); },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.chat, color: AppTheme.greenNeon),
+                    title: const Text('شات أوفلاين', style: TextStyle(color: Colors.white)),
+                    onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const ChatScreen())); },
                   ),
                   const Divider(color: AppTheme.subtleBorder),
                   ListTile(
