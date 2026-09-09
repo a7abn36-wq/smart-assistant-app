@@ -1,0 +1,50 @@
+name: Build & Release APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.2'
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Upload APK to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v2.1-build-${{ github.run_number }}
+          name: المساعد الذكي v2.1 (Build ${{ github.run_number }})
+          files: build/app/outputs/flutter-apk/app-release.apk
+          body: |
+            🔥 المساعد الذكي - تطبيق صيانة محطة التبريد
+
+            **الجديد في الإصدار ده:**
+            - معدات المحطة الحقيقية (Trane CVHF1300, B&G GLC/e-1510, FELM motors)
+            - أعطال مخصصة للمحطة
+            - جدول الصيانة الدورية (PM Schedule)
+            - شات أوفلاين (WiFi Direct)
+            - مسح لوحة البيانات (Nameplate Scanner)
+            - كل المصطلحات التقنية بالعامية المصرية
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
