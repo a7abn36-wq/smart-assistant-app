@@ -88,6 +88,20 @@ const List<EquipmentCategory> categories = [
     icon: "\uD83D\uDEE0\uFE0F",
     color: 0xFFB388FF,
   ),
+  EquipmentCategory(
+    id: "motors",
+    nameAr: "محركات",
+    nameEn: "Motors",
+    icon: "\u26A1",
+    color: 0xFFFF9100,
+  ),
+  EquipmentCategory(
+    id: "stationFaults",
+    nameAr: "أعطال المحطة",
+    nameEn: "Station-Specific",
+    icon: "\uD83C\uDFED",
+    color: 0xFFFF1744,
+  ),
 ];
 
 // ───────────────────────────────────────────────────────────────────────────────
@@ -1580,6 +1594,249 @@ List<Fault> allFaults = [
     keywords: ["تيار بدء", "inrush", "LRA", "1233A", "soft starter", "DOL", "FELM", "132kW", "315M", "VFD", "باس باس", "bypass"],
     severity: 'critical',
   ),
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // أعطال خاصة بمعدات المحطة — STATION-SPECIFIC FAULTS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  // ─── Trane CenTraVac CVHF1300 ───
+  Fault(
+    id: "st-01",
+    categoryId: "stationFaults",
+    title: "شيلر ترين CVHF1300 بيعمل Surge (سيرج - تذبذب) والحمل أقل من 30%",
+    warning: "⚠️ السيرج (Surge) في الشيلر السنتروبيفوجل خطير أوي! بيسبب اهتزاز عنيف في الكمبريسور ولو استمر ممكن يتكسر الـ Impeller (الريشة) أو يحصل تلف في الـ Guide Vanes (ريش المدخل). قف الشيلر فوراً لو السيرج مستمر!",
+    cause: "السبب: الشيلر شغال على حمل واطي (أقل من 30% من الـ Capacity) — ده بيحصل لما عدد الـ AHUs الشغالة قل أو الـ CHW Temp Setpoint غلط. في الـ CenTraVac، الـ Inlet Guide Vanes (IGV) بتقفل لما الحمل يقل، ولو قفلت أكتر من اللازم بيحصل سيرج. كمان الـ Hot Gas Bypass لو مش مضبوط صح بيسبب السيرج.",
+    solution: """١. لو السيرج بيحصل: زود الحمل على الشيلر (شغل AHUs أكتر) أو عدل الـ Setpoint
+٢. اتأكد إن الـ Hot Gas Bypass (HGBP) شغال ومضبوط صح — ده بيمنع السيرج على الحمل الواطي
+٣. على شاشة الـ CH530: شوف الـ IGV Position (موضع ريش المدخل) — لو أقل من 10% قف الشيلر
+٤. لو الحمل أقل من 25% بشكل دايم: فكر تعمل Low Load Control أو تشغل شيلر أصدر
+٥. قس الـ Approach Temperature (درجة التقارب) — لو عالي يبقى الـ Evaporator Tubes لازجة
+٦. سجل كل حاجة على شاشة الـ CH530 قبل ما تعدل أي حاجة""",
+    keywords: ["سيرج", "surge", "ترين", "Trane", "CVHF1300", "CenTraVac", "حمل واطي", "low load", "IGV", "guide vanes", "hot gas bypass", "HGBP", "CH530", "شيلر اهتزاز"],
+    severity: 'critical',
+  ),
+  Fault(
+    id: "st-02",
+    categoryId: "stationFaults",
+    title: "شاشة تحكم ترين CH530 طلعت Error Code (كود خطأ) ومش عارف إيه يعني",
+    warning: "⚠️ م تعملش Reset (ريست) للـ Error Code من غير ما تعرف السبب! الـ CH530 بيسجل الأكواد في الـ Alarm Log — لازم تقرأه الأول وتفهم المشكلة قبل ما تمسحه.",
+    cause: "السبب: أي Error على الـ CH530 معناه في مشكلة حقيقية — ممكن ضغط عالي/واطي، زيت ناقص، حساس بايظ، أو Overload. الـ CH530 بيعمل Lockout (قفل حماية) عشان يحمي الشيلر.",
+    solution: """١. على شاشة الـ CH530: روح لـ Alarm/Event Log (سجل الإنذارات)
+٢. دوّن الـ Error Code بالزبط (مثلاً: E-210, E-315, إلخ)
+٣. افتح الـ Service Manual (كتيب الصيانة) بتاع ترين وابحث عن الكود
+٤. كل كود ليه السب والإجراء المطلوب — اتبع التعليمات بالزبط
+٥. لو الكود ضغط عالي (HP): شيك الكوندنسر ومية التبريد
+٦. لو الكود ضغط واطي (LP): شيك الفريون والـ Evaporator
+٧. لو الكود زيت (Oil): شيك مستوى الزيت والـ Oil Pump
+٨. بعد الإصلاح: اعمل Reset من الـ CH530 — مش من الكهرباء!""",
+    keywords: ["كود خطأ", "error code", "CH530", "ترين", "Trane", "alarm", "إنذار", "lockout", "ريست", "reset", "شاشة تحكم", "controller"],
+    severity: 'critical',
+  ),
+  Fault(
+    id: "st-03",
+    categoryId: "stationFaults",
+    title: "سخان الزيت (Oil Heater) في شيلر ترين مش شغال — الزيت بيلزج بعد الوقف",
+    warning: "⚠️ سخان الزيت (Oil Heater) مهم أوي! لو مش شغال، الفريون HFO-514A بيتسرب في الزيت لما الشيلر واقف وبيعمل Dilution (تخفيف) — وده بيخلي الزيت يبقى رقيق ومش بيحمل الكمبريسور أول تشغيل. الكمبريسور ممكن يتكسر!",
+    cause: "السبب: الـ Oil Heater (115V / 750W) بايظ أو الـ Heater Fuse مقطوع أو الـ Control Relay مش بيدى كهرباء للسخان. لازم السخان يبقى شغال حتى لما الشيلر واقف عشان يمنع الـ Refrigerant Dilution (تخفيف الفريون في الزيت).",
+    solution: """١. قس الفولت على طرفين الـ Oil Heater — لازم يكون 115V
+٢. لو مفيش فولت: شيك الـ Heater Fuse والـ Control Relay
+٣. لو فيه فولت بس مش بيسخن: السخان نفسه بايظ — غيره
+٤. لازم مستوى الزيت في الـ Sight Glass يكون واضح ومش فيه فقاعات
+٥. لو الشيلر كان واقف أكتر من 24 ساعة والسخان كان بايظ: غير الزيت قبل التشغيل!
+٦. بعد الإصلاح: خلي الشيلر واقف 8 ساعات مع السخان شغال قبل ما تشغله""",
+    keywords: ["سخان زيت", "oil heater", "ترين", "Trane", "CVHF1300", "زيت لزج", "dilution", "تخفيف فريون", "HFO-514A", "زيت كمبريسور", "heater fuse"],
+    severity: 'critical',
+  ),
+  Fault(
+    id: "st-04",
+    categoryId: "stationFaults",
+    title: "فريون HFO-514A ناقص في شيلر ترين — التبريد مش كافي",
+    warning: "⚠️ الفريون HFO-514A غالي أوي! أي تسريب معناه فلوس كتير. كمان الشيلر لو شغال والفريون ناقص، الـ Evaporator Pressure هتنزل والكمبريسور هيتحمل أوي. لازم تصلح التسريب الأول وبعدين تعيد الشحن.",
+    cause: "السبب: تسريب من الـ Joints (وصلات) أو الـ Flanges (فلانجات) أو الـ Schrader Valves أو الـ Rupture Disc أو ثقب في الـ Heat Exchanger. الـ HFO-514A ده غاز صديق للبيئة بس درجة غليانه واطية فبيسرب في أي شق.",
+    solution: """١. قف الشيلر واتأكد إن الـ Isolation Valves مقفولة
+٢. اعمل Leak Test بـ Nitrogen (نيتروجين) — ارفع الضغط لـ 45 PSI (الـ Test Pressure)
+٣. استخدم Electronic Leak Detector (جهاز كشف تسريب إلكتروني) + Soap Bubbles (فقاعات صابون)
+٤. شيك الـ Rupture Disc (قرص الانفجار) — ده مكان شائع للتسريب في الـ CenTraVac
+٥. شيك كل الـ Flanges والـ Gaskets (الجوانات)
+٦. لو لقيت التسريب: صلحه واعمل Evacuation بالـ Vacuum Pump لحد 500 Microns
+٧. شحن الفريون بالوزن الصح من الـ Nameplate — Factory Charge 1500 lbs (680 kg)
+٨. م تخلطش HFO-514A بـ R-123 القديم خالص!""",
+    keywords: ["فريون ناقص", "HFO-514A", "تسريب فريون", "leak", "ترين", "Trane", "CVHF1300", "nitrogen", "نيتروجين", "rupture disc", "evacuation", "شحن فريون", "R-123"],
+    severity: 'critical',
+  ),
+  Fault(
+    id: "st-05",
+    categoryId: "stationFaults",
+    title: "مضخة الزيت (Oil Pump) في شيلر ترين مش بتصرف — ضغط الزيت واطي",
+    warning: "⚠️ ضغط الزيت الواطي معناه الكمبريسور مش بيتحمل صح! لو الزيت مش بيوصل للمحامل (Bearings) والـ Gear (التروس)، الكمبريسور هيحترق. الـ Oil Pump (115V / 1.7A) لازم تكون شغالة أول ما الشيلر يبدأ.",
+    cause: "السبب: الـ Oil Filter مسدود، أو الـ Oil Pump نفسها بايظة، أو مستوى الزيت ناقص، أو الـ Oil Pressure Regulator مضبوط غلط، أو الـ Oil Cooler لازج.",
+    solution: """١. على الـ CH530: شوف الـ Oil Pressure (ضغط الزيت) — لازم يكون فوق 69 kPa (كيلو باسكال)
+٢. لو ضغط الزيت واطي: غير الـ Oil Filter فوراً — ده السبب الأكثر شيوعاً
+٣. شيك مستوى الزيت في الـ Oil Sight Glass
+٤. اتأكد إن الـ Oil Pump شغالة — قس التيار (لازم حوالي 1.7A)
+٥. لو الـ Oil Pump بايظة: استبدلها — م تشغلش الشيلر من غيرها!
+٦. شيك الـ Oil Cooler واتأكد إن مية التبريد ماشية فيه
+٧. بعد الإصلاح: شغل الشيلر واتابع ضغط الزيت لمدة 30 دقيقة""",
+    keywords: ["مضخة زيت", "oil pump", "ضغط زيت واطي", "ترين", "Trane", "CVHF1300", "oil filter", "فلتر زيت", "CH530", "كمبريسور", "محامل"],
+    severity: 'critical',
+  ),
+
+  // ─── B&G GLC 200-320 (المضخة الصغيرة) ───
+  Fault(
+    id: "st-06",
+    categoryId: "stationFaults",
+    title: "مضخة برايمري B&G GLC 200-320 بتعمل صوت طحن (Cavitation) وصوت طرقاعة",
+    warning: "⚠️ الكاويتيشن (Cavitation - فقاعات بخار) خطير أوي على المضخة! بيسبب تآكل شديد في الـ Impeller (الريشة) وبيعمل ثقوب فيه. لو استمر ممكن يتكسر الـ Impiller ويحصل تلف في الـ Mechanical Seal. قف المضخة فوراً!",
+    cause: "السبب: الـ NPSHa (ضغط السحب المتاح) أقل من الـ NPSHr (ضغط السحب المطلوب). ده بيحصل لما: الـ Strainer مسدود، أو الـ Suction Valve مقفول جزئياً، أو مستوى الميه في الـ Expansion Tank واطي، أو الـ Chilled Water Temperature عالي أوي (قريب من الغليان).",
+    solution: """١. قف المضخة فوراً! م تشغلهاش والصوت موجود
+٢. نظف الـ Strainer (الفلتر) على خط الساكشن — ده السبب رقم 1
+٣. اتأكد إن الـ Suction Valve مفتوح بالكامل
+٤. شيك مستوى الميه في الـ Expansion Tank — لازم يكون عند العلامة
+٥. قس الـ Suction Pressure (ضغط السحب) — لازم يكون فوق الـ Vapor Pressure
+٦. اتأكد إن درجة حرارة الـ CHW مش أعلى من 15°C في خط الساكشن
+٧. لو الـ Impiller فيه تآكل: لازم تتغير — افحصها بـ Endoscope (كاميرا داخلية)""",
+    keywords: ["كاويتيشن", "cavitation", "صوت طحن", "طرقاعة", "B&G", "GLC", "200-320", "سترينر", "strainer", "NPSH", "ساكشن", "suction"],
+    severity: 'critical',
+  ),
+  Fault(
+    id: "st-07",
+    categoryId: "stationFaults",
+    title: "الـ Mechanical Seal في مضخة B&G GLC 200-320 بيسرب ميه",
+    warning: "⚠️ تسريب الـ Mechanical Seal لو كتير ممكن الميه توصل للموتور وتعمل Short Circuit (شورت)! كمان لو المضخة بتسرب وبتفقد ميه، مستوى النظام هينزل والشيلر هيقف.",
+    cause: "السبب: الـ Seal قديم ومحتاج تغيير (العمر الافتراضي 2-3 سنين)، أو الـ Seal Face تآكل من الـ Cavitation، أو الـ Seal مش مضبوط صح وقت التركيب، أو الميه فيها كيماويات بتاكل الـ Seal.",
+    solution: """١. قيّم كمية التسريب: قطره في الدقيقة عادي، أكتر من كده لازم تغير
+٢. لو التسريب بسيب ميه جنب الموتور: قف المضخة فوراً!
+٣. جهز الـ Mechanical Seal الجديد — لازم يكون نفس الـ Part Number
+٤. أقفل الـ Suction Valve والـ Discharge Valve قبل الفتح
+٥. فك الـ Seal Plate وغير الـ Seal — انتبه للـ Orientation (الاتجاه)
+٦. قبل التركيب: نظف الـ Shaft Sleeve واتأكد إنه مش مخدوش
+٧. بعد التركيب: شغل المضخة واتابع التسريب أول 24 ساعة""",
+    keywords: ["تسريب ميه", "mechanical seal", "سيل", "B&G", "GLC", "200-320", "مضخة بتسرب", "seal leak", "شورت", "short circuit"],
+    severity: 'warning',
+  ),
+
+  // ─── B&G e-1510 350-410 (المضخة الكبيرة) ───
+  Fault(
+    id: "st-08",
+    categoryId: "stationFaults",
+    title: "مضخة B&G e-1510 الكبيرة — الاهتزاز (Vibration) أعلى من 4.5 mm/s",
+    warning: "⚠️ الاهتزاز العالي في المضخة الكبيرة (132kW / 3000 GPM) خطير! ممكن يكسر الـ Shaft (العمود) أو الـ Bearings (المحامل) أو الـ Coupling (الكوبلنج). لازم تقف المضخة لو الاهتزاز فوق 7 mm/s!",
+    cause: "السبب: محامل (Bearings) بايظة أو متآكلة، أو الـ Impeller فيه Unbalance (عدم اتزان)، أو الـ Coupling مش محاذا صح (Misalignment)، أو الـ Foundation (القاعدة) مش محكمة، أو الـ Resonance (رنين) في الـ Piping.",
+    solution: """١. قس الاهتزاز على الـ DE و NDE Bearings بـ Vibration Analyzer
+٢. لو على الـ DE (Drive End) أعلى: محمل DE بايظ — غيره
+٣. لو على الـ NDE (Non-Drive End) أعلى: محمل NDE بايظ — غيره
+٤. قس الـ Misalignment على الـ Coupling بـ Laser Alignment Tool
+٥. لو الـ Impeller فيه Unbalance: اعمل Dynamic Balancing (اتزان ديناميكي)
+٦. شيك الـ Foundation Bolts (مسامير القاعدة) — لازم تكون مشدودة بالزبط
+٧. سجل القراءات كل أسبوع واتابع الـ Trend (الاتجاه)""",
+    keywords: ["اهتزاز", "vibration", "B&G", "e-1510", "350-410", "محامل", "bearings", "misalignment", "عدم محاذاة", "كوبلنج", "coupling", "unbalance"],
+    severity: 'warning',
+  ),
+  Fault(
+    id: "st-09",
+    categoryId: "stationFaults",
+    title: "مضخة B&G e-1510 الكبيرة — الأمبير أعلى من 224A (Overload)",
+    warning: "⚠️ الـ Overload (حمل زايد) في المضخة الكبيرة معناه حاجة غلط! التيار المقنن 223.9A عند 400V — لو فوق 230A الموتور ممكن يحترق أو الـ Overload Relay يفصل. لازم تكتشف السبب بسرعة.",
+    cause: "السبب: الـ Impeller أكبر من اللزوم (اتغير بـ impeller أكبر بالغلط)، أو الـ System Resistance أقل من الـ Design (الشيلر بيدي ميه أكتر من المطلوب)، أو الـ VFD مش شغال والمضخة بتشغل Full Speed، أو الـ Bearing Stiffness زادت (محامل تاكل).",
+    solution: """١. قس الأمبير على الـ 3 Phases بالـ Clamp Meter
+٢. لو الـ 3 Phases مش متساوية (فرق أكتر من 2%): في Phase Imbalance
+٣. قارن الـ Actual Flow والـ Actual Head مع الـ Pump Curve
+٤. لو الـ Operating Point بعيد عن الـ BEP: عدل الـ Impeller أو الـ Speed
+٥. اتأكد إن الـ VFD شغال والـ Speed Setpoint صح
+٦. لو الـ Impeller كبير أوي: لازم يتغير بـ impeller أصدر (Trim Impeller)
+٧. شيك الـ Overload Relay Setting — لازم يكون 110-115% من الـ FLA""",
+    keywords: ["أمبير عالي", "overload", "B&G", "e-1510", "132kW", "224A", "تيار زايد", "حمل زايد", "impeller", "VFD", "بامب كارف", "pump curve"],
+    severity: 'critical',
+  ),
+
+  // ─── FELM F3-225M-4 (محرك 45kW) ───
+  Fault(
+    id: "st-10",
+    categoryId: "motors",
+    title: "محرك FELM 45kW (F3-225M-4) سخن أوي — درجة حرارة السطح فوق 80°C",
+    warning: "⚠️ الموتور سخن أوي! العزل (Insulation Class F) بيتحمل لحد 155°C بس ده حد قصوى. لو السطح فوق 80°C معناه الداخل ممكن يكون فوق 120°C وده خطير على العزل. قف الموتور واتأكد من السبب!",
+    cause: "السبب: Overload (حمل زايد)، أو الـ Cooling مش كافي (TEFC بس مروحة التبريد بايظة أو الغرفة سخنانة)، أو الـ Bearing سخن من قلة الشحم، أو الـ Voltage Imbalance (عدم توازن الجهد)، أو الـ Air Gap قل (تآكل في المحامل).",
+    solution: """١. قس الـ Surface Temperature بـ IR Gun (مسدس حرارة)
+٢. قس الأمبير على الـ 3 Phases — لازم يكون حوالي 80A
+٣. لو الأمبير أعلى من 85A: في Overload — شوف إيه السبب
+٤. شيك مروحة التبريد على الموتور — لازم تدور بحرية
+٥. اتأكد إن الـ Air Intake مش مسدود (غبار أو أوساخ)
+٦. قس الـ Voltage على الـ 3 Phases — الفرق لازم يكون أقل من 2%
+٧. لو المحامل سخن: شحم المحامل بـ CALTEX SRI-2 (كل 4000 ساعة)
+٨. لو كل حاجة ظاهرياً صح بس سخن: ممكن العزل ضعف والموتور محتاج يترجع""",
+    keywords: ["موتور سخن", "FELM", "45kW", "225M", "حرارة عالية", "overheat", "IR gun", "مسدس حرارة", "TEFC", "عزل", "insulation"],
+    severity: 'warning',
+  ),
+  Fault(
+    id: "st-11",
+    categoryId: "motors",
+    title: "محرك FELM 45kW — الصوت مختلف / صوت طحن من المحامل",
+    warning: "⚠️ صوت Grinding (طحن) من المحامل معناه الـ Bearing بايظ! لو استمر الشغل الموتور هيقف فجأة والمحمل ممكن ينش (Seize) ويعمل تلف في الـ Shaft. قف الموتور فوراً لو الصوت عنيف!",
+    cause: "السبب: المحامل (Bearings) تآكلت من قلة الشحم أو الشحم الغلط أو الرطوبة، أو الـ Bearing Race فيها Pitting (تنقر) من الـ Electrical Discharge، أو الـ Grease Quantity مش صح (أوي أو قليل أوي).",
+    solution: """١. قف الموتور واستنى يبرد — قس الـ Vibration بـ Vibration Pen
+٢. لو الاهتزاز فوق 4.5 mm/s: المحمل محتاج تغيير
+٣. افحص الـ Grease Nipple (بيمب الشحم) — نظفه وحط شحم CALTEX SRI-2
+٤. شحم كل محمل 20-30g (جرام) بس — متحطش أوي!
+٥. لو الصوت مستمر بعد الشحم: المحمل بايظ لازم يتغير
+٦. عند التغيير: استخدم Bearing Puller (سحابة محامل) — متضربش على الـ Shaft!
+٧. المحمل الجديد لازم يكون نفس الـ Part Number والـ Clearance""",
+    keywords: ["صوت طحن", "bearing noise", "محمل بايظ", "FELM", "45kW", "225M", "شحم", "grease", "CALTEX SRI-2", "رمان بلي"],
+    severity: 'critical',
+  ),
+
+  // ─── FELM F3-315M-4 (محرك 132kW) ───
+  Fault(
+    id: "st-12",
+    categoryId: "motors",
+    title: "محرك FELM 132kW (F3-315M-4) — الـ PTC Trip (حماية حرارية) بتفصل",
+    warning: "⚠️ الـ PTC (150°C للملف / 50°C للبيئة) بتفصل عشان الموتور سخن أوي! ده نظام حماية — م تعملش Bypass (تحايل) عليه أبداً! لو عملت Bypass الموتور يحترق وتكلفة تغيير 132kW فلوس كتير أوي.",
+    cause: "السبب: الحمل على الموتور أكتر من الـ Rated (132kW)، أو الـ Cooling مش كافي، أو الـ Voltage Imbalance، أو الـ PTC Sensor نفسه بايظ (بيدى قراءة غلط)، أو الـ Ambient Temperature عالي أوي (فوق 50°C).",
+    solution: """١. خلي الـ PTC يفصل — م تعملش Bypass أبداً!
+٢. استنى الموتور يبرد (30 دقيقة على الأقل)
+٣. قس الـ Surface Temperature بـ IR Gun
+٤. قس الأمبير على الـ 3 Phases — لازم يكون حوالي 224A
+٥. لو الأمبير عالي: في Overload — شوف إيه سبب الحمل الزايد
+٦. اتأكد إن درجة حرارة الغرفة تحت 40°C
+٧. لو الـ PTC بيفصل من غير سخان حقيقي: الـ Sensor بايظ — غيره
+٨. سجل كل مرة الـ PTC بيفصل مع الساعة والقراءات""",
+    keywords: ["PTC", "حماية حرارية", "thermal trip", "FELM", "132kW", "315M", "موتور سخن", "overheat", "bypass", "تحايل"],
+    severity: 'critical',
+  ),
+  Fault(
+    id: "st-13",
+    categoryId: "motors",
+    title: "محرك FELM 132kW — Phase Imbalance (فرق بين الأطوار التلاتة أكتر من 2%)",
+    warning: "⚠️ الـ Phase Imbalance خطير أوي! لو الفرق بين الـ 3 Phases أكتر من 2%، الموتور بيحس بـ Negative Sequence Current (تيار سالب) بيسخن الملفات (Windings) من جوا. ده بيسبب تلف العزل ولو استمر الموتور يحترق!",
+    cause: "السبب: حمل Single Phase كبير على نفس الـ Distribution Board (لوحة التوزيع)، أو كابل مكسور أو Loose Connection (وصلة رخوة)، أو الـ Transformer مغلوظ، أو الـ Main Contactor نقطة تلامس تآكلت.",
+    solution: """١. قس الـ Voltage على الـ 3 Phases (R-Y-B) بالـ Multimeter
+٢. احسب الـ Imbalance: (أكبر فرق عن المتوسط / المتوسط) × 100
+/ 2
+٣. لو فوق 2%: شيك الـ Main Contactor واتأكد إن الـ Contacts سليمة
+٤. شيك كل الـ Connections في الـ Motor Terminal Box
+٥. اتأكد إن مفيش Single Phase Load كبير على نفس الـ DB
+٦. لو الـ Imbalance من الـ Transformer: بلغ الكهربا
+٧. م تشغلش الموتور لو الـ Imbalance فوق 5% — ده خطر""",
+    keywords: ["phase imbalance", "عدم توازن أطوار", "فرق أطوار", "FELM", "132kW", "315M", "فاز", "phase", "loose connection", "وصلة رخوة", "contactor"],
+    severity: 'critical',
+  ),
+
+  // ─── نظام التشحيم الأوتوماتيكي ───
+  Fault(
+    id: "st-14",
+    categoryId: "stationFaults",
+    title: "خزان الشحم الأوتوماتيكي فاضي — المحامل مش بتتشحم!",
+    warning: "⚠️ لو الخزان فاضي والـ Auto-grease System مش شغال، المحامل (Bearings) بتشغل جافة (Dry Run) وده بيسبب تآكل سريع أوي! الـ Bearing Life بيقلل لـ 10% من العمر الطبيعي لو اشتغل جاف. عبّي الخزان فوراً!",
+    cause: "السبب: الخزان استهلك (45g كل 4000 ساعة)، أو الـ Plunger (البلاونج) بايظ ومش بيدفع شحم، أو الـ Delivery Line (الأنبوب) مسدود، أو الشحم استحلب (صارب صلب) من الحرارة.",
+    solution: """١. افحص الخزان — لو فاضي: عبّيه بـ CALTEX SRI-2 بس!
+٢. متخلطش أنواع شحم أبداً — ده بيسبب Chemical Incompatibility
+٣. شيك الـ Plunger بيدفع ولا لأ — حط إصبعك على الـ Delivery Line
+٤. لو الـ Line مسدود: فكه ونظفه بـ Solvent (مذيب)
+٥. بعد التعبئة: شغل الـ System واتأكد إن الشحم بيوصّل للمحامل
+٦. دوّن تاريخ التعبية والـ Run Hours في التطبيق
+٧. الفترة الجاية: عبّيه تاني بعد 4000 ساعة تشغيل""",
+    keywords: ["شحم", "autogrease", "خزان فاضي", "محامل جافة", "CALTEX SRI-2", "4000 ساعة", "تشحيم", "regreasing", "plunger"],
+    severity: 'critical',
+  ),
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1780,6 +2037,8 @@ const List<String> emergencyFaultIds = [
   'dv-01', 'dv-02', 'dr-11', 'dr-12', 'dr-13',
   'wt-02',
   'et-01', 'et-03', 'et-05',
+  // أعطال المحطة الحرجة
+  'st-01', 'st-02', 'st-03', 'st-04', 'st-05', 'st-06', 'st-09', 'st-11', 'st-12', 'st-13', 'st-14',
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════════
