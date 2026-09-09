@@ -1381,6 +1381,205 @@ List<Fault> allFaults = [
     keywords: ["محامل", "bearings", "صوت طحن", "grinding", "FELM", "misalignment", "vibration", "bearing failure"],
     severity: 'critical',
   ),
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // أعطال مخصصة لمعدات المحطة الحقيقية — STATION-SPECIFIC FAULTS
+  // Trane CenTraVac CVHF1300 | B&G GLC & e-1510 | FELM Motors
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  // ─── Trane CenTraVac CVHF1300 — أعطال الشيلر المخصصة ───
+  Fault(
+    id: "ch-13",
+    categoryId: "chillers",
+    title: "الشيلر بيعمل Surge (سيرج - تذبذب) — Trane CVHF1300",
+    warning: "⚠️ السيرج (Surge) في الشيلر السنتروبيفوجل ده خطير جداً! بيحصل لما الحمل قل عن 30% من السعة. الكمبريسور بيلف من غير ما يقدر يدفع الفريون — ده بيسبب اهتزاز عالي وتلف في الـ Impeller (الريشة) والـ Bearings (المحامل). لو السيرج استمر أكتر من 30 ثانية قف الشيلر!",
+    cause: "السبب: الحمل على الشيلر قل عن الـ Minimum Load (أقل حمل) وده بيحصل لما الـ CHW Return Temperature (حرارة رجوع الميه) قريبة من الـ Supply (الخروج)، أو الـ Inlet Guide Vanes (ريش المدخل) مقفولة أكتر من اللازم، أو الـ Hot Gas Bypass (صمام تحويل الغاز الساخن) مش شغال.",
+    solution: """١. لو السيرج بيبقى شغال عادي — بس لو استمر أكتر من 30 ثانية قف الشيلر
+٢. اتأكد إن الـ Hot Gas Bypass Valve شغال وبيفتح لما الحمل يقل
+٣. شيك الـ Inlet Guide Vanes على شاشة CH530 — لازم تفتح تدريجياً
+٤. لو الحمل قل أوي، شغل الشيلر على Low Load Mode من الـ CH530
+٥. قس الـ CHW Delta T — لو أقل من 2°C يبقى الحمل قليل أوي
+٦. راجع الـ Surge Line على الـ Compressor Map في الـ Service Manual""",
+    keywords: ["سيرج", "surge", "تذبذب", "CVHF1300", "Trane", "سنترا فاك", "حمل قليل", "low load", "guide vanes", "hot gas bypass", "CH530"],
+    severity: 'critical',
+  ),
+  Fault(
+    id: "ch-14",
+    categoryId: "chillers",
+    title: "شاشة التحكم CH530 طلعت Error Code (كود خطأ) — Trane CVHF1300",
+    warning: "⚠️ كل Error Code ليه معنى مختلف! متعملش Reset (ريست) كتير من غير ما تعرف السبب — ده ممكن يخفي مشكلة حقيقية ويخلي الشيلر يتكسر.",
+    cause: "السبب: الأكواد الشايعة في الـ CH530 هي: E-01 (High Pressure - ضغط عالي)، E-02 (Low Pressure - ضغط واطي)، E-03 (Oil Pressure - ضغط زيت واطي)، E-04 (Motor Overload - حمل زايد)، E-05 (Surge - سيرج)، E-06 (Freeze Protection - حماية تجمد). كل كود ليه سبب مختلف.",
+    solution: """١. سجل الـ Error Code بالزبط من شاشة CH530
+٢. صورت الشاشة قبل أي حاجة — عشان ترجعها بعدين
+٣. راجع الـ Error Code في الـ Service Manual (كتيب الصيانة) بتاع Trane
+٤. E-01: شيك ميه الكوندنسر والـ Fans (ممكن وسخة)
+٥. E-02: اعمل Leak Test — فريون ناقص
+٦. E-03: شيك مستوى الزيت والـ Oil Filter
+٧. E-04: قس الأمبير — ممكن حمل زايد
+٨. E-05: ده سيرج — راجع عطل ch-13
+٩. E-06: شيك الـ CHW Flow — ممكن Flow Switch بايظ
+١٠. بعد إصلاح السبب، اعمل Reset واحد بس وشوف""",
+    keywords: ["CH530", "error code", "كود خطأ", "Trane", "CVHF1300", "شاشة تحكم", "ريست", "reset", "E-01", "E-02", "E-03", "E-04", "E-05", "E-06"],
+    severity: 'critical',
+  ),
+  Fault(
+    id: "ch-15",
+    categoryId: "chillers",
+    title: "زيت الشيلر متخفف (Oil Dilution) — الفريون HFO-514A اختلط بالزيت",
+    warning: "⚠️ Dilution (تخفيف الزيت) بيحصل لما الفريون HFO-514A بيمتزج مع الزيت وبيقلل لزوجته — ده بيخلي الزيت مش قادر يشحم الكمبريسور كويس والمحامل تتكسر! لازم تشيك مستوى الزيت كل أسبوع.",
+    cause: "السبب: الـ Oil Heater (سخان الزيت) واقف أو بايظ، أو الشيلر وقف فترة طويلة من غير ما الـ Heater يشتغل، أو السوبرهيت Superheat واطي أوي فبيسمح لسائل الفريون يدخل الكمبريسور.",
+    solution: """١. اتأكد إن الـ Oil Heater شغال لما الشيلر واقف — لازم يفضل شغل 4-8 ساعات قبل التشغيل
+٢. قس لزوجة الزيت (Oil Viscosity) — لو أقل من الطبيعي يبقى فيه Dilution
+٣. لو الزيت متخفف أوي: غير الزيت بالكامل واعمل Oil Flush (غسيل)
+٤. غير الـ Oil Filter كمان — الفريون المختلط ممكن يكون لسه فيه
+٥. شيك الـ Superheat — لازم يكون 4-7°C لضمان إن مفيش سائل بيدخل الكمبريسور
+٦. راجع الـ Oil Analysis (تحليل الزيت) كل 6 شهور""",
+    keywords: ["زيت متخفف", "oil dilution", "HFO-514A", "فريون", "زيت كمبريسور", "oil heater", "سخان زيت", "superheat", "سوبرهيت", "CVHF1300", "Trane"],
+    severity: 'warning',
+  ),
+  Fault(
+    id: "ch-16",
+    categoryId: "chillers",
+    title: "الشيلر مش بيبرد كويس و الـ Delta T (دلتا تي) أقل من 5°C — Trane CVHF1300",
+    warning: "⚠️ الـ Delta T (الفرق بين حرارة دخول وخروج مية الشيلد) لازم يكون حوالي 5°C. لو أقل يبقى الشيلر مش بيبرد كويس — ده بيخلي المحطة كلها مش بتبرود والـ AHUs مش بتبرد الأماكن.",
+    cause: "السبب: الـ Evaporator Tubes (أنابيب المبخر) لازجة من الـ Fouling (ترسبات)، أو فريون HFO-514A ناقص، أو الـ Guide Vanes مش بتفتح بالكامل، أو الحمل على الشيلر أقل من الـ Design.",
+    solution: """١. قس الـ CHW Supply و Return Temperature وشوف الـ Delta T
+٢. لو Delta T أقل من 4°C: اعمل Chemical Cleaning (تنظيف كيميائي) للـ Evaporator
+٣. شيك مستوى الفريون بالـ Sight Glass والـ Subcooling/Superheat
+٤. اتأكد من الـ Guide Vanes Position على شاشة CH530
+٥. قس الـ Approach Temperature — لو أعلى من 3°C يبقى الأنابيب لازجة
+٦. لو كل حاجة أوكي بس الـ Delta T لسه واطي: شيك الـ Flow Rate (التدفق) — ممكن المضخات مش بتدفع كويس""",
+    keywords: ["دلتا تي", "delta T", "مش ببرد", "low delta T", "evaporator", "مبخر", "fouling", "ترسبات", "approach", "CVHF1300", "guide vanes", "CH530"],
+    severity: 'warning',
+  ),
+
+  // ─── B&G GLC 200-320 — أعطال المضخة الصغيرة المخصصة ───
+  Fault(
+    id: "pp-09",
+    categoryId: "primaryPumps",
+    title: "المضخة B&G GLC بتعمل Cavitation (كاويتيشن) وصوت كتكوتة — 1800 GPM",
+    warning: "⚠️ الكاويتيشن (فقاعات بخار جوا المضخة) بيكسر الـ Impeller (الريشة) والـ Mechanical Seal (السيل)! الصوت زي حصا بتتكسر. لو سمعته قف المضخة فوراً!",
+    cause: "السبب: الـ NPSHa (ضغط الساكشن المتاح) أقل من الـ NPSHr (المطلوب) — وده بيحصل لما الـ Strainer مسدود، أو الـ Suction Valve مقفول جزئياً، أو مستوى مية الـ Expansion Tank ناقص، أو مية الشيلد سخنة أوي.",
+    solution: """١. قف المضخة فوراً لو سمعت صوت كاويتيشن
+٢. نظف الـ Strainer (الفلتر) على خط الساكشن
+٣. اتأكد إن الـ Suction Valve مفتوح بالكامل
+٤. شيك مستوى الميه في الـ Expansion Tank — لازم الضغط يكون 2 بار
+٥. قس الـ Suction Pressure — لازم يكون أعلى من الـ NPSHr (شوف الـ Pump Curve)
+٦. لو الـ NPSHa لسه واطي: زود ارتفاع الـ Expansion Tank أو قلل التدفق""",
+    keywords: ["كاويتيشن", "cavitation", "صوت كتكتكة", "B&G", "GLC", "NPSH", "سترينر", "strainer", "ساكشن", "ضغط واطي", "1800 GPM"],
+    severity: 'critical',
+  ),
+  Fault(
+    id: "pp-10",
+    categoryId: "primaryPumps",
+    title: "أمبير المضخة B&G GLC أعلى من 80A — محرك FELM 45kW فوق الحمل",
+    warning: "⚠️ محرك FELM 45kW التيار المقنن بتاعه 80.2A عند 400V. لو الأمبير أعلى من 85A يبقى في Overload (حمل زايد) والموتور ممكن يحترق! قف المضخة وقس الأسباب.",
+    cause: "السبب: الـ Impeller (الريشة) اتآكلت وكبرت، أو الـ Mechanical Seal مسدود، أو الـ Discharge Pressure أعلى من الـ Design، أو الـ Three-Phase Voltage مش متساوي (Phase Imbalance — عدم توازن الأطوار).",
+    solution: """١. قس الأمبير على الأطوار التلاتة بالـ Clamp Meter
+٢. لو الفرق بين أي طور والتاني أكتر من 2%: شيك الكابل والـ Contactor
+٣. قس الـ Discharge Pressure وقارنه بالـ Pump Curve
+٤. لو الضغط أعلى من الـ Design: قلل الـ Valve Opening
+٥. شيك الـ Impeller — لو متآكل أو مكسور لازم يتغير
+٦. قس الـ Vibration — لو عالي يبقى في Misalignment""",
+    keywords: ["أمبير عالي", "overload", "حمل زايد", "FELM", "45kW", "80A", "GLC", "B&G", "phase imbalance", "عدم توازن", "محرك"],
+    severity: 'critical',
+  ),
+
+  // ─── B&G e-1510 350-410 — أعطال المضخة الكبيرة المخصصة ───
+  Fault(
+    id: "pp-11",
+    categoryId: "primaryPumps",
+    title: "المضخة الكبيرة B&G e-1510 بتهتز أوي — Vibration عالي على الـ DE Bearing",
+    warning: "⚠️ الاهتزاز (Vibration) على محمل نهاية الدوران (DE Bearing) لازم يكون أقل من 4.5 mm/s. لو أعلى من 7 mm/s قف المضخة فوراً! الاهتزاز العالي بيكسر المحامل والـ Seal وبيسبب تسريب.",
+    cause: "السبب: الـ Misalignment (عدم محاذاة) بين الموتور FELM 132kW والمضخة، أو الـ Impeller Unbalance (عدم توازن الريشة)، أو المحامل خربانة، أو الـ Foundation Bolts (مسامير القاعدة) فكهة، أو الـ Resonance (رنين).",
+    solution: """١. قس الـ Vibration على الـ DE و NDE Bearings بالـ Vibration Pen أو Analyzer
+٢. لو القراءة أعلى من 4.5 mm/s: اعمل Laser Alignment (محاذاة بالليزر)
+٣. شيك الـ Foundation Bolts — شد كل المسامير
+٤. لو الاهتزاز لسه عالي: اعمل Impeller Balance (توازن الريشة)
+٥. شيك حالة المحامل — لو خربانة غيرها
+٦. بعد كل إصلاح: قس الـ Vibration تاني واتأكد إنه تحت 2.5 mm/s""",
+    keywords: ["اهتزاز", "vibration", "e-1510", "B&G", "132kW", "DE bearing", "محمل", "misalignment", "محاذاة", "توازن", "impeller", "foundation"],
+    severity: 'critical',
+  ),
+  Fault(
+    id: "pp-12",
+    categoryId: "primaryPumps",
+    title: "المضخة الكبيرة B&G e-1510 بتسرب من الـ Mechanical Seal — 3000 GPM",
+    warning: "⚠️ تسريب من الـ Mechanical Seal (السيل الميكانيكي) في المضخة دي خطير — دي بتدفع 3000 GPM يعني ضغط عالي! التسريب ممكن يوصل للموتور FELM 132kW ويحرق الملفات.",
+    cause: "السبب: الـ Mechanical Seal اتآكل من الكاويتيشن أو التشغيل الجاف، أو الـ O-Rings (حلقات مطاطية) خربانة، أو الـ Seal Face (وجه السيل) خدش، أو الـ Misalignment بين الـ Shaft Sleeve والـ Seal Housing.",
+    solution: """١. قف المضخة وأقفل الـ Suction و Discharge Valves
+٢. قيم كمية التسريب — لو أكتر من Drop/min (قطره في الدقيقة) يبقى السيل خربان
+٣. فك الـ Seal Housing واشوف الـ Seal Faces — لو خدشه لازم يتغير
+٤. ركب Mechanical Seal جديد من نفس الـ Part Number
+٥. قبل التشغيل: افتح الـ Suction Valve الأول واتأكد إن الميه ماشية
+٦. بعد التشغيل: شيك التسريب تاني — لازم يكون Zero أو Drop بس""",
+    keywords: ["تسريب", "ميكانيكال سيل", "mechanical seal", "e-1510", "B&G", "3000 GPM", "O-ring", "سيل خربان", "seal leak", "132kW"],
+    severity: 'critical',
+  ),
+
+  // ─── FELM F3-225M-4 — أعطال المحرك الصغير المخصصة ───
+  Fault(
+    id: "dr-10",
+    categoryId: "drives",
+    title: "محرك FELM 45kW سخن أوي ودرجة حرارة السطح فوق 80°C",
+    warning: "⚠️ محرك FELM F3-225M-4TEFC حرارة السطح الطبيعية تحت 70°C. لو فوق 80°C يبقى الموتور في خطر! العزل من فئة F (يتحمل لحد 155°C) بس ده درجة الملفات مش السطح. لو السطح 80°C يبقى الملفات ممكن تكون 120°C+!",
+    cause: "السبب: Overload (حمل زايد)، أو الـ TEFC Cooling (تبريد الموتور) مش كافي لأن المروحة الخارجية بايظة، أو الـ Ambient Temperature (حرارة الغرفة) عالية أوي، أو الـ IP55 مش بيخلي الهوا تدخل تبرد كويس في البيئات الحارة.",
+    solution: """١. قس حرارة السطح بـ IR Gun (مسدس حرارة) — سجل القراءة
+٢. قس الأمبير بالـ Clamp Meter — لازم يكون تحت 80A
+٣. شيك مروحة التبريد الخارجية — لازم تلف والمفات نظيفة
+٤. لو حرارة الغرفة فوق 40°C: حسّن التهوية في غرفة المضخات
+٥. لو الأمبير عالي: شيك الحمل على المضخة (ممكن Impeller كبر)
+٦. في الصيف: ممكن تحتاج Exhaust Fan (مروحة شفط) في الغرفة""",
+    keywords: ["سخن", "حرارة", "overheat", "FELM", "45kW", "225M", "TEFC", "IP55", "IR gun", "مسدس حرارة", "مروحة تبريد", "ambient"],
+    severity: 'warning',
+  ),
+  Fault(
+    id: "dr-11",
+    categoryId: "drives",
+    title: "محرك FELM 45kW بيسمع صوت طنين (Electrical Hum) مختلف عن الطبيعي",
+    warning: "⚠️ صوت الطنين (Hum) لو اختلف عن الطبيعي ممكن يكون Phase Imbalance (عدم توازن الأطوار) أو Single Phasing (طور ناقص)! ده خطير جداً — الموتور ممكن يحترق في دقايق.",
+    cause: "السبب: Phase Imbalance (فرق بين الأطوار التلاتة أكتر من 2%)، أو Single Phasing (كابل أو فيوز في طور واحد قطع)، أو الـ Contactor Contacts (نقاط الكنتاكتور) متآكلة في طور واحد، أو الـ VFD (الدرايف) مش بيدي تيار متساوي.",
+    solution: """١. قس الأمبير على كل طور بالـ Clamp Meter — الفرق لازم يكون أقل من 2%
+٢. قس الفولت على كل طور — لازم يكون 380V ± 5%
+٣. لو في طور ناقص (صفر أمبير): قف الموتور فوراً!
+٤. شيك الـ Contactor — النقاط لازم تكون نظيفة ومقفولة كويس
+٥. شيك الـ Fuses/Circuit Breaker على كل طور
+٦. لو الـ VFD موجود: شيك الـ Output Current من شاشة الـ Drive""",
+    keywords: ["طنين", "hum", "phase imbalance", "طور ناقص", "single phasing", "FELM", "45kW", "كنتاكتور", "contactor", "فيوز", "أطوار"],
+    severity: 'critical',
+  ),
+
+  // ─── FELM F3-315M-4 — أعطال المحرك الكبير المخصصة ───
+  Fault(
+    id: "dr-12",
+    categoryId: "drives",
+    title: "محرك FELM 132kW بيفصل على الـ Thermal Protection (PTC) — الحرارة 150°C",
+    warning: "⚠️ محرك FELM F3-315M-4 فيه PTC Thermistor (حساس حرارة) بيعمل Trip (فصل) لما الملفات توصل 150°C. ده حماية أخيرة! لو بيفصل كتير يبقى الموتور مش شغال تحت الظروف الصح — لازم تكتشف السبب مش بس تعمل Reset!",
+    cause: "السبب: الحمل على الموتور أعلى من الـ Rated (132kW)، أو الـ Cooling مش كافي، أو الـ Ambient Temperature عالي (أكتر من 50°C اللي هو الـ Max Ambient)، أو الـ PTC Controller (متحكم الحماية) مش مظبوط، أو تيار البدء (Inrush) عالي أوي.",
+    solution: """١. لما الموتور يفصل: استنى يبرد لحد ما حرارة السطح تحت 50°C
+٢. قس الأمبير عند الحمل الكامل — لازم يكون حوالي 224A
+٣. لو الأمبير أعلى من 230A: الحمل زايد — شيك المضخة
+٤. اتأكد من الـ PTC Controller Settings — لازم يفصل عند 150°C بس
+٥. حسّن التهوية في غرفة المضخات — لو الحرارة فوق 40°C
+٦. لو المشكلة بتتكرر: ممكن الموتور محتاج يترقي لـ 160kW""",
+    keywords: ["PTC", "thermal protection", "حماية حرارة", "FELM", "132kW", "315M", "150°C", "trip", "فصل", "overload", "حمل زايد"],
+    severity: 'critical',
+  ),
+  Fault(
+    id: "dr-13",
+    categoryId: "drives",
+    title: "محرك FELM 132kW بيسحب تيار بدء (Inrush) عالي أوي — 1233A LRA",
+    warning: "⚠️ تيار البدء (LRA - Locked Rotor Amps) بتاع الموتور ده 1233A! ده تيار عالي أوي — لازم الـ Soft Starter أو الـ VFD يكون شغال عشان يقلل التيار ده. لو ببدأ Direct On Line (DOL) التيار ده ممكن يفصل الـ Main Breaker!",
+    cause: "السبب: الموتور بيبدأ DOL (مباشر من غير Soft Starter)، أو الـ Soft Starter بايظ وبيبدأ DOL بداله، أو الـ VFD مش شغال والموتور بيبدأ عبر الـ Bypass Contactor، أو الحمل على المضخة عالي أثناء البدء (الـ Discharge Valve مفتوح).",
+    solution: """١. اتأكد إن الـ Soft Starter أو الـ VFD هو اللي بيبدأ الموتور — مش DOL
+٢. لو الـ Soft Starter بايظ: صلحه أو استبدله — م تبدأش DOL!
+٣. قبل البدء: أقفل الـ Discharge Valve عشان تقلل الحمل
+٤. بعد ما الموتور يبدأ ويستقر: افتح الـ Valve تدريجياً
+٥. قس تيار البدء — لازم يكون تحت 400A لو Soft Starter شغال
+٦. لو ببدأ عبر VFD Bypass: ده خطر — صلح الـ VFD الأول""",
+    keywords: ["تيار بدء", "inrush", "LRA", "1233A", "soft starter", "DOL", "FELM", "132kW", "315M", "VFD", "باس باس", "bypass"],
+    severity: 'critical',
+  ),
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1575,10 +1774,10 @@ List<Guide> allGuides = [
 // ═══════════════════════════════════════════════════════════════════════════════
 
 const List<String> emergencyFaultIds = [
-  'ch-01', 'ch-03', 'ch-04',
-  'pp-03', 'pp-04', 'pp-05',
+  'ch-01', 'ch-03', 'ch-04', 'ch-13', 'ch-14',
+  'pp-03', 'pp-04', 'pp-05', 'pp-09', 'pp-10', 'pp-11', 'pp-12',
   'ct-03', 'ct-05',
-  'dv-01', 'dv-02',
+  'dv-01', 'dv-02', 'dr-11', 'dr-12', 'dr-13',
   'wt-02',
   'et-01', 'et-03', 'et-05',
 ];

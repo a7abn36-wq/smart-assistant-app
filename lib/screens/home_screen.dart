@@ -9,6 +9,7 @@ import 'about_screen.dart';
 import 'equipment_screen.dart';
 import 'pm_screen.dart';
 import 'chat_screen.dart';
+import 'nameplate_scanner_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -254,6 +255,47 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
+              const SizedBox(height: 12),
+              // Quick Action Buttons — الصف التالت
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NameplateScannerScreen())),
+                      child: Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: AppTheme.glowBox(AppTheme.amber, blur: 12, op: 0.25),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.document_scanner, color: AppTheme.amber),
+                            SizedBox(width: 8),
+                            Text('مسح نيم بليت', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ChatScreen())),
+                      child: Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: AppTheme.glowBox(AppTheme.greenNeon, blur: 12, op: 0.25),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.chat, color: AppTheme.greenNeon),
+                            SizedBox(width: 8),
+                            Text('شات أوفلاين', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ] else if (_searchResults.isEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 40),
@@ -407,6 +449,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     leading: const Icon(Icons.chat, color: AppTheme.greenNeon),
                     title: const Text('شات أوفلاين', style: TextStyle(color: Colors.white)),
                     onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const ChatScreen())); },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.document_scanner, color: AppTheme.amber),
+                    title: const Text('مسح لوحة البيانات', style: TextStyle(color: Colors.white)),
+                    subtitle: const Text('Nameplate Scanner', style: TextStyle(color: AppTheme.ice, fontSize: 10)),
+                    onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const NameplateScannerScreen())); },
                   ),
                   const Divider(color: AppTheme.subtleBorder),
                   ListTile(

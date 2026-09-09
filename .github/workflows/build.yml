@@ -1,0 +1,51 @@
+name: Build & Release APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Upload APK to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v2.0.0
+          name: "المساعد الذكي v2.0 - تحديث كبير"
+          files: build/app/outputs/flutter-apk/app-release.apk
+          body: |
+            🔥 تحديث كبير v2.0 - المساعد الذكي
+            
+            **إيه الجديد:**
+            - ✅ أعطال مخصصة لمعدات المحطة الحقيقية (Trane CVHF1300, B&G GLC/e-1510, FELM Motors)
+            - ✅ ميزة مسح لوحة البيانات (Nameplate Scanner)
+            - ✅ 8 أعطال جديدة للمعدات المخصصة
+            - ✅ كل المصطلحات التقنية مكتوب معناها بالعامية المصرية
+            - ✅ شات أوفلاين (WiFi Direct)
+            - ✅ جدول صيانة وقائية (PM Schedule)
+            - ✅ صفحة معدات المحطة بالمواصفات الحقيقية
+            - ✅ صور المحطة المعدلة احترافياً
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
